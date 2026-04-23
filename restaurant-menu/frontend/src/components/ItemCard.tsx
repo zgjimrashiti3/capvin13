@@ -10,14 +10,19 @@ function InstagramIcon() {
   );
 }
 
-// Export for use in footer
 export { InstagramIcon };
 
 interface Props {
   item: MenuItem;
+  cartQuantity?: number;
+  onOrder?: (item: MenuItem) => void;
+  onAddOne?: (item: MenuItem) => void;
 }
 
-export default function ItemCard({ item }: Props) {
+export default function ItemCard({ item, cartQuantity = 0, onOrder, onAddOne }: Props) {
+  const inCart = cartQuantity > 0;
+  const canInteract = item.isAvailable && (onOrder || onAddOne);
+
   return (
     <div
       className={`bg-white rounded-xl overflow-hidden transition-shadow duration-200 hover:shadow-md ${!item.isAvailable ? 'opacity-70' : ''}`}
@@ -25,12 +30,7 @@ export default function ItemCard({ item }: Props) {
     >
       <div className="relative">
         {item.imageUrl ? (
-          <img
-            src={item.imageUrl}
-            alt={item.name}
-            className="w-full h-48 object-cover"
-            loading="lazy"
-          />
+          <img src={item.imageUrl} alt={item.name} className="w-full h-48 object-cover" loading="lazy" />
         ) : (
           <div
             className="w-full h-44 flex items-center justify-center"
@@ -51,7 +51,6 @@ export default function ItemCard({ item }: Props) {
           </div>
         )}
 
-        {/* Price badge */}
         <div
           className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg text-white text-sm font-bold shadow-md"
           style={{ backgroundColor: '#CE2B37' }}
@@ -73,8 +72,53 @@ export default function ItemCard({ item }: Props) {
             />
           )}
         </div>
+
         {item.description && (
           <p className="text-gray-500 text-sm mt-1.5 leading-relaxed">{item.description}</p>
+        )}
+
+        {canInteract && (
+          <div className="mt-3">
+            {inCart ? (
+              /* Item is already in cart — quick-add mode */
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => onAddOne?.(item)}
+                  className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-white text-sm font-semibold transition-opacity hover:opacity-90 active:scale-95"
+                  style={{ backgroundColor: '#006B3C' }}
+                >
+                  {/* Quantity badge */}
+                  <span
+                    className="w-5 h-5 rounded-full bg-white/25 flex items-center justify-center text-xs font-bold"
+                  >
+                    {cartQuantity}
+                  </span>
+                  Shto përsëri
+                  {/* Checkmark */}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </button>
+                {onOrder && (
+                  <button
+                    onClick={() => onOrder(item)}
+                    className="px-3 py-2 rounded-lg text-xs font-medium border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors flex-shrink-0"
+                  >
+                    Personalizo
+                  </button>
+                )}
+              </div>
+            ) : (
+              /* Not in cart — standard order button */
+              <button
+                onClick={() => onOrder?.(item)}
+                className="w-full py-2 rounded-lg text-white text-sm font-semibold transition-opacity hover:opacity-90 active:scale-95"
+                style={{ backgroundColor: '#CE2B37' }}
+              >
+                Porosit
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

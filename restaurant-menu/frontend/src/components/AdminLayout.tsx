@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import DashboardSection from '../pages/admin/DashboardPage';
 import CategoriesSection from '../pages/admin/CategoriesPage';
 import ItemsSection from '../pages/admin/ItemsPage';
 import QRSection from '../pages/admin/QRCodePage';
+import OrdersSection from '../pages/admin/OrdersPage';
+import { getOrders } from '../api/orders';
 
-export type AdminSection = 'dashboard' | 'categories' | 'items' | 'qr';
+export type AdminSection = 'dashboard' | 'categories' | 'items' | 'qr' | 'orders';
 
-const navItems: { id: AdminSection; label: string; icon: React.ReactElement }[] = [
+const navItems: { id: AdminSection; label: string; icon: React.ReactElement; badge?: boolean }[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',
@@ -18,6 +21,18 @@ const navItems: { id: AdminSection; label: string; icon: React.ReactElement }[] 
         <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
       </svg>
     ),
+  },
+  {
+    id: 'orders',
+    label: 'Porositë',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+        <rect x="9" y="3" width="6" height="4" rx="1" />
+        <path d="M9 12h6M9 16h4" />
+      </svg>
+    ),
+    badge: true,
   },
   {
     id: 'categories',
@@ -55,6 +70,7 @@ const sectionTitles: Record<AdminSection, string> = {
   categories: 'Kategoritë',
   items: 'Artikujt',
   qr: 'QR Kodi',
+  orders: 'Porositë',
 };
 
 export default function AdminLayout() {
@@ -63,6 +79,23 @@ export default function AdminLayout() {
   const [pendingAdd, setPendingAdd] = useState<null | 'categories' | 'items'>(null);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const { data: pendingOrders = [] } = useQuery({
+    queryKey: ['orders-pending-count'],
+    queryFn: () => getOrders('PENDING'),
+    refetchInterval: 15000,
+  });
+
+  const pendingCount = pendingOrders.length;
+
+  useEffect(() => {
+    if (pendingCount > 0) {
+      document.title = `🔴 (${pendingCount}) Porosi të reja — Capvin13`;
+    } else {
+      document.title = 'Capvin13 — Admin';
+    }
+    return () => { document.title = 'Capvin13'; };
+  }, [pendingCount]);
 
   const handleNavClick = (section: AdminSection) => {
     setActiveSection(section);
@@ -115,8 +148,9 @@ export default function AdminLayout() {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {navItems.map(({ id, label, icon }) => {
+          {navItems.map(({ id, label, icon, badge }) => {
             const isActive = activeSection === id;
+            const showBadge = badge && pendingCount > 0;
             return (
               <button
                 key={id}
@@ -134,7 +168,19 @@ export default function AdminLayout() {
                 }}
               >
                 <span className={isActive ? 'text-[#006B3C]' : 'text-white/70'}>{icon}</span>
-                {label}
+                <span className="flex-1 text-left">{label}</span>
+                {showBadge && (
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span
+                      className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                      style={{ backgroundColor: '#CE2B37' }}
+                    />
+                    <span
+                      className="relative inline-flex rounded-full h-2.5 w-2.5"
+                      style={{ backgroundColor: '#CE2B37' }}
+                    />
+                  </span>
+                )}
               </button>
             );
           })}
@@ -173,12 +219,18 @@ export default function AdminLayout() {
         >
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white p-1 rounded-md transition-colors hover:bg-white/10"
+            className="text-white p-1 rounded-md transition-colors hover:bg-white/10 relative"
             aria-label="Toggle menu"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M3 6h18M3 12h18M3 18h18" />
             </svg>
+            {pendingCount > 0 && (
+              <span
+                className="absolute top-0 right-0 w-2 h-2 rounded-full"
+                style={{ backgroundColor: '#CE2B37' }}
+              />
+            )}
           </button>
           <span
             className="text-lg font-bold text-white"
@@ -193,6 +245,7 @@ export default function AdminLayout() {
           {activeSection === 'dashboard' && (
             <DashboardSection onQuickAdd={handleQuickAdd} />
           )}
+          {activeSection === 'orders' && <OrdersSection />}
           {activeSection === 'categories' && (
             <CategoriesSection
               triggerAdd={pendingAdd === 'categories'}

@@ -1,7 +1,18 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMenuGrouped } from '../api/menuItems';
 import ItemCard, { InstagramIcon } from '../components/ItemCard';
+import TableModal from '../components/TableModal';
+import OrderModal from '../components/OrderModal';
+import CartDrawer from '../components/CartDrawer';
+import FloatingCartButton from '../components/FloatingCartButton';
+import OrderHistoryButton from '../components/OrderHistoryButton';
+import OrderHistoryDrawer from '../components/OrderHistoryDrawer';
+import { useCart } from '../context/CartContext';
+import { useSessionOrders } from '../context/SessionOrdersContext';
+import { useToast } from '../components/Toast';
+import { useOrderStatusPolling } from '../hooks/useOrderStatusPolling';
+import type { MenuItem } from '../types';
 
 export default function MenuPage() {
   const { data: categories, isLoading, error } = useQuery({
@@ -9,6 +20,28 @@ export default function MenuPage() {
     queryFn: getMenuGrouped,
   });
 
+  const { tableNumber, items: cartItems, addItem } = useCart();
+  const { sessionOrders, updateSessionOrderStatus } = useSessionOrders();
+  const { showToast } = useToast();
+  const [orderingItem, setOrderingItem] = useState<MenuItem | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  useOrderStatusPolling(sessionOrders, updateSessionOrderStatus, showToast);
+
+  const getCartQty = (menuItemId: string) =>
+    cartItems.find((i) => i.menuItemId === menuItemId)?.quantity ?? 0;
+
+  const handleAddOne = (menuItem: MenuItem) => {
+    addItem({
+      menuItemId: menuItem.id,
+      name: menuItem.name,
+      price: Number(menuItem.price),
+      imageUrl: menuItem.imageUrl,
+      quantity: 1,
+      notes: '',
+    });
+  };
+  const [cartOpen, setCartOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement>>({});
 
   const scrollToCategory = (id: string) => {
@@ -39,6 +72,9 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f8f8f8', fontFamily: 'Inter, system-ui, sans-serif' }}>
 
+      {/* Table number modal — shown until table is set */}
+      {!tableNumber && <TableModal onDone={() => {}} />}
+
       {/* ── Top Navbar ── */}
       <header style={{ backgroundColor: '#006B3C' }}>
         <div className="max-w-3xl mx-auto px-4 py-5 flex items-center justify-between">
@@ -53,7 +89,14 @@ export default function MenuPage() {
               Sapori autentici di Napoli
             </p>
           </div>
-          <span className="text-3xl" role="img" aria-label="Italian flag">🇮🇹</span>
+          <div className="flex items-center gap-3">
+            {tableNumber && (
+              <span className="text-white/80 text-sm font-medium">
+                Tavolina #{tableNumber}
+              </span>
+            )}
+            <span className="text-3xl" role="img" aria-label="Italian flag">🇮🇹</span>
+          </div>
         </div>
       </header>
 
@@ -90,7 +133,7 @@ export default function MenuPage() {
       )}
 
       {/* ── Categories & items ── */}
-      <div className="flex-1 max-w-3xl w-full mx-auto px-4 pb-16">
+      <div className="flex-1 max-w-3xl w-full mx-auto px-4 pb-28">
         {categories?.map((cat) => (
           <section
             key={cat.id}
@@ -107,14 +150,21 @@ export default function MenuPage() {
               {cat.description && (
                 <p className="text-gray-500 text-sm mt-1">{cat.description}</p>
               )}
-              {/* Red underline accent */}
               <div className="mt-2 h-0.5 w-10 rounded-full" style={{ backgroundColor: '#CE2B37' }} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {cat.items.length === 0 ? (
                 <p className="text-gray-400 col-span-2 text-sm italic">Nessun articolo in questa categoria.</p>
               ) : (
-                cat.items.map((item) => <ItemCard key={item.id} item={item} />)
+                cat.items.map((item) => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    cartQuantity={tableNumber ? getCartQty(item.id) : 0}
+                    onOrder={tableNumber ? setOrderingItem : undefined}
+                    onAddOne={tableNumber ? handleAddOne : undefined}
+                  />
+                ))
               )}
             </div>
           </section>
@@ -124,8 +174,6 @@ export default function MenuPage() {
       {/* ── Footer ── */}
       <footer style={{ backgroundColor: '#004d2b' }}>
         <div className="max-w-3xl mx-auto px-4 py-10 text-center">
-
-          {/* Instagram */}
           <a
             href="https://instagram.com/capvin13"
             target="_blank"
@@ -133,24 +181,15 @@ export default function MenuPage() {
             className="inline-flex items-center gap-2.5 text-white/80 hover:text-white transition-all duration-200 hover:scale-105 group text-sm mb-5"
             style={{ display: 'inline-flex' }}
           >
-            <span
-              className="transition-colors duration-200"
-              style={{ color: 'rgba(255,255,255,0.7)' }}
-            >
+            <span className="transition-colors duration-200" style={{ color: 'rgba(255,255,255,0.7)' }}>
               <InstagramIcon />
             </span>
             <span className="font-medium group-hover:text-white">
               Seguici su Instagram <span style={{ color: '#CE2B37' }}>@capvin13</span>
             </span>
           </a>
-
           <div className="border-t border-white/10 my-5" />
-
-          {/* Branding */}
-          <p
-            className="text-white text-lg font-bold mb-1"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
-          >
+          <p className="text-white text-lg font-bold mb-1" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
             🇮🇹 Capvin13 — Napoli, Italia
           </p>
           <p className="text-white/50 text-xs mt-2">
@@ -158,6 +197,21 @@ export default function MenuPage() {
           </p>
         </div>
       </footer>
+
+      {/* ── Order modal ── */}
+      {orderingItem && (
+        <OrderModal item={orderingItem} onClose={() => setOrderingItem(null)} />
+      )}
+
+      {/* ── Floating cart button ── */}
+      <FloatingCartButton onClick={() => setCartOpen(true)} />
+
+      {/* ── Order history button + drawer ── */}
+      <OrderHistoryButton onClick={() => setHistoryOpen(true)} />
+      <OrderHistoryDrawer open={historyOpen} onClose={() => setHistoryOpen(false)} />
+
+      {/* ── Cart drawer ── */}
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   );
 }

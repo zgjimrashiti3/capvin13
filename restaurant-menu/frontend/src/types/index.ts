@@ -35,3 +35,35 @@ export interface User {
   id: string;
   username: string;
 }
+
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'READY' | 'DELIVERED' | 'CANCELLED';
+
+export interface OrderItem {
+  id: string;
+  orderId: string;
+  menuItemId: string | null;
+  quantity: number;
+  unitPrice: number;
+  notes: string | null;
+  createdAt: string;
+  menuItem?: MenuItem | null;
+}
+
+export interface Order {
+  id: string;
+  tableNumber: number;
+  status: OrderStatus;
+  totalPrice: number;
+  createdAt: string;
+  updatedAt: string;
+  items: OrderItem[];
+}
+
+export interface CartItem {
+  menuItemId: string;
+  name: string;
+  price: number;
+  imageUrl: string | null;
+  quantity: number;
+  notes: string;
+}
