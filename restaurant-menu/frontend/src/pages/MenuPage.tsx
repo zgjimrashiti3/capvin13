@@ -1,4 +1,4 @@
-﻿import { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMenuGrouped } from '../api/menuItems';
 import ItemCard, { InstagramIcon } from '../components/ItemCard';
@@ -77,21 +77,24 @@ export default function MenuPage() {
 
       {/* ── Top Navbar ── */}
       <header style={{ backgroundColor: '#006B3C' }}>
-        <div className="max-w-3xl mx-auto px-4 py-5 flex items-center justify-between">
+        <div className="max-w-3xl mx-auto px-4 py-3 lg:py-5 flex items-center justify-between">
           <div>
             <h1
-              className="text-3xl font-bold text-white"
+              className="text-2xl lg:text-3xl font-bold text-white"
               style={{ fontFamily: '"Playfair Display", Georgia, serif', letterSpacing: '-0.5px' }}
             >
               Capvin13
             </h1>
-            <p className="text-white/60 text-xs mt-0.5 italic" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+            <p
+              className="text-white/60 text-[10px] lg:text-xs mt-0.5 italic"
+              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+            >
               Sapori autentici di Napoli
             </p>
           </div>
           <div className="flex items-center gap-3">
             {tableNumber && (
-              <span className="text-white/80 text-sm font-medium">
+              <span className="text-white/80 text-xs lg:text-sm font-medium">
                 Tavolina #{tableNumber}
               </span>
             )}
@@ -102,46 +105,51 @@ export default function MenuPage() {
       {/* ── Sticky category tabs ── */}
       {categories && categories.length > 0 && (
         <div className="sticky top-0 z-20 bg-white shadow-sm">
-          <div className="max-w-3xl mx-auto">
-            <div className="flex overflow-x-auto scrollbar-hide px-4">
+          <div className="max-w-3xl mx-auto relative">
+            {/* Fade hint on right edge */}
+            <div
+              className="absolute right-0 top-0 bottom-0 w-10 pointer-events-none z-10"
+              style={{ background: 'linear-gradient(to left, white 30%, transparent)' }}
+            />
+            <div className="flex overflow-x-auto scrollbar-hide px-3 gap-1.5 py-2">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => scrollToCategory(cat.id)}
-                  className="flex-shrink-0 relative px-5 py-3.5 text-sm font-medium transition-colors duration-200 whitespace-nowrap"
-                  style={{ color: '#1a1a1a' }}
+                  className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-colors duration-150 whitespace-nowrap border"
+                  style={{ color: '#1a1a1a', borderColor: '#e5e7eb', backgroundColor: 'white' }}
                   onMouseEnter={(e) => {
-                    const line = e.currentTarget.querySelector('.tab-line') as HTMLElement;
-                    if (line) line.style.opacity = '1';
+                    (e.currentTarget as HTMLElement).style.backgroundColor = '#006B3C';
+                    (e.currentTarget as HTMLElement).style.color = 'white';
+                    (e.currentTarget as HTMLElement).style.borderColor = '#006B3C';
                   }}
                   onMouseLeave={(e) => {
-                    const line = e.currentTarget.querySelector('.tab-line') as HTMLElement;
-                    if (line) line.style.opacity = '0';
+                    (e.currentTarget as HTMLElement).style.backgroundColor = 'white';
+                    (e.currentTarget as HTMLElement).style.color = '#1a1a1a';
+                    (e.currentTarget as HTMLElement).style.borderColor = '#e5e7eb';
                   }}
                 >
                   {cat.name}
-                  <span
-                    className="tab-line absolute bottom-0 left-0 right-0 h-0.5 transition-opacity duration-200"
-                    style={{ backgroundColor: '#CE2B37', opacity: 0 }}
-                  />
                 </button>
               ))}
+              {/* Spacer so last pill clears the fade */}
+              <div className="flex-shrink-0 w-8" />
             </div>
           </div>
         </div>
       )}
 
       {/* ── Categories & items ── */}
-      <div className="flex-1 max-w-3xl w-full mx-auto px-4 pb-28">
+      <div className="flex-1 max-w-3xl w-full mx-auto px-3 lg:px-4 pb-28">
         {categories?.map((cat) => (
           <section
             key={cat.id}
             ref={(el) => { if (el) sectionRefs.current[cat.id] = el; }}
-            className="pt-10"
+            className="pt-8"
           >
-            <div className="mb-6">
+            <div className="mb-4">
               <h2
-                className="text-2xl font-bold text-[#1a1a1a]"
+                className="text-xl lg:text-2xl font-bold text-[#1a1a1a]"
                 style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 {cat.name}
@@ -151,7 +159,9 @@ export default function MenuPage() {
               )}
               <div className="mt-2 h-0.5 w-10 rounded-full" style={{ backgroundColor: '#CE2B37' }} />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            {/* Mobile: single column list · Desktop: 2-column grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4">
               {cat.items.length === 0 ? (
                 <p className="text-gray-400 col-span-2 text-sm italic">Nessun articolo in questa categoria.</p>
               ) : (
