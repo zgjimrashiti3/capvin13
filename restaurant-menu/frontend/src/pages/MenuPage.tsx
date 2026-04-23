@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+﻿import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMenuGrouped } from '../api/menuItems';
 import ItemCard, { InstagramIcon } from '../components/ItemCard';
@@ -95,7 +95,6 @@ export default function MenuPage() {
                 Tavolina #{tableNumber}
               </span>
             )}
-            <span className="text-3xl" role="img" aria-label="Italian flag">🇮🇹</span>
           </div>
         </div>
       </header>

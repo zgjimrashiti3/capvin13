@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
 interface Props {
@@ -26,7 +26,6 @@ export default function TableModal({ onDone }: Props) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
         {/* Green top band */}
         <div className="px-8 py-8 text-center" style={{ backgroundColor: '#006B3C' }}>
-          <span className="text-5xl block mb-3">🇮🇹</span>
           <h1
             className="text-2xl font-bold text-white"
             style={{ fontFamily: '"Playfair Display", Georgia, serif' }}

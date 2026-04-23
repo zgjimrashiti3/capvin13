@@ -75,7 +75,6 @@ export default function LoginPage() {
       >
         {/* Mobile logo */}
         <div className="md:hidden text-center mb-10">
-          <span className="text-3xl">🇮🇹</span>
           <h1
             className="text-3xl font-bold mt-2"
             style={{ fontFamily: '"Playfair Display", Georgia, serif', color: '#006B3C' }}
