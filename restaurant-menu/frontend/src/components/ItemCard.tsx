@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { MenuItem } from '../types';
 
 function InstagramIcon() {
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default function ItemCard({ item, cartQuantity = 0, onOrder, onAddOne }: Props) {
+  const [imgError, setImgError] = useState(false);
   const inCart = cartQuantity > 0;
   const canInteract = item.isAvailable && (onOrder || onAddOne);
 
@@ -29,11 +31,17 @@ export default function ItemCard({ item, cartQuantity = 0, onOrder, onAddOne }: 
       style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}
     >
       <div className="relative">
-        {item.imageUrl ? (
-          <img src={item.imageUrl} alt={item.name} className="w-full h-48 object-cover" loading="lazy" />
+        {item.imageUrl && !imgError ? (
+          <img
+            src={item.imageUrl}
+            alt={item.name}
+            className="w-full h-48 object-cover"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
         ) : (
           <div
-            className="w-full h-44 flex items-center justify-center"
+            className="w-full h-48 flex items-center justify-center"
             style={{ background: 'linear-gradient(135deg, rgba(0,107,60,0.06) 0%, rgba(206,43,55,0.06) 100%)' }}
           >
             <span className="text-5xl">🍽️</span>
