@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useSessionOrders, type SessionOrder } from '../context/SessionOrdersContext';
 import { useCart } from '../context/CartContext';
+import TableModal from './TableModal';
 import type { OrderStatus } from '../types';
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
@@ -29,7 +31,8 @@ interface Props {
 
 export default function OrderHistoryDrawer({ open, onClose }: Props) {
   const { sessionOrders, clearHistory } = useSessionOrders();
-  const { addItem } = useCart();
+  const { addItem, tableNumber } = useCart();
+  const [showEditTable, setShowEditTable] = useState(false);
 
   const hasReady = sessionOrders.some((o) => o.status === 'READY');
 
@@ -64,6 +67,26 @@ export default function OrderHistoryDrawer({ open, onClose }: Props) {
             </h2>
           </div>
           <button onClick={onClose} className="text-white/80 hover:text-white transition-colors text-2xl leading-none">×</button>
+        </div>
+
+        {/* Current table strip */}
+        <div className="flex items-center justify-between px-5 py-2.5 border-b flex-shrink-0 bg-gray-50">
+          <span className="text-sm text-gray-500">
+            Tavolina aktuale:&nbsp;
+            <span className="font-semibold text-[#1a1a1a]">#{tableNumber ?? '—'}</span>
+          </span>
+          <button
+            onClick={() => setShowEditTable(true)}
+            className="flex items-center gap-1.5 text-xs font-medium transition-colors px-2 py-1 rounded-lg hover:bg-gray-200"
+            style={{ color: '#006B3C' }}
+            title="Ndrysho numrin e tavolinës"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Ndrysho
+          </button>
         </div>
 
         {/* READY alert banner */}
@@ -164,6 +187,9 @@ export default function OrderHistoryDrawer({ open, onClose }: Props) {
           </div>
         )}
       </div>
+
+      {/* Table edit modal — rendered after drawer so it sits on top (z-[60] > z-50) */}
+      {showEditTable && <TableModal onDone={() => setShowEditTable(false)} />}
     </>
   );
 }

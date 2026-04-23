@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
 interface Props {
@@ -6,8 +6,8 @@ interface Props {
 }
 
 export default function TableModal({ onDone }: Props) {
-  const { setTableNumber } = useCart();
-  const [value, setValue] = useState('');
+  const { tableNumber, setTableNumber } = useCart();
+  const [value, setValue] = useState(tableNumber ? String(tableNumber) : '');
   const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,15 +22,14 @@ export default function TableModal({ onDone }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}>
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-        {/* Green top band */}
         <div className="px-8 py-8 text-center" style={{ backgroundColor: '#006B3C' }}>
           <h1
             className="text-2xl font-bold text-white"
             style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
           >
-            Mirë se vini në Capvin13
+            {tableNumber ? 'Ndrysho tavolinën' : 'Mirë se vini në Capvin13'}
           </h1>
           <p className="text-white/70 text-sm mt-1.5">Sapori autentici di Napoli</p>
         </div>
@@ -44,7 +43,7 @@ export default function TableModal({ onDone }: Props) {
             min={1}
             value={value}
             onChange={(e) => { setValue(e.target.value); setError(''); }}
-            placeholder="p.sh. 5"
+            placeholder="p.sh. 1"
             className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg text-center font-semibold focus:outline-none transition-colors"
             style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
             onFocus={(e) => (e.currentTarget.style.borderColor = '#006B3C')}
@@ -58,7 +57,7 @@ export default function TableModal({ onDone }: Props) {
             className="mt-5 w-full py-3.5 rounded-xl text-white font-semibold text-base transition-opacity hover:opacity-90 active:scale-95"
             style={{ backgroundColor: '#006B3C', fontFamily: 'Inter, system-ui, sans-serif' }}
           >
-            Shko te menuja →
+            {tableNumber ? 'Ruaj ndryshimin' : 'Shko te menuja →'}
           </button>
         </form>
       </div>
