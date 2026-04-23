@@ -74,21 +74,13 @@ export default function MenuPage() {
 
       {/* ── Top Navbar ── */}
       <header style={{ backgroundColor: '#006B3C' }}>
-        <div className="max-w-3xl mx-auto px-4 py-3 lg:py-5 flex items-center justify-between">
-          <div>
-            <h1
-              className="text-2xl lg:text-3xl font-bold text-white"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif', letterSpacing: '-0.5px' }}
-            >
-              Capvin13
-            </h1>
-            <p
-              className="text-white/60 text-[10px] lg:text-xs mt-0.5 italic"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
-            >
-              Sapori autentici di Napoli
-            </p>
-          </div>
+        <div className="max-w-3xl mx-auto px-4 py-2 lg:py-3 flex items-center justify-between">
+          <img
+            src="/capvin.jpg"
+            alt="Capvin13"
+            className="h-12 lg:h-14 w-auto object-contain"
+            style={{ mixBlendMode: 'multiply' }}
+          />
           <div className="flex items-center gap-3">
             {tableNumber && (
               <span className="text-white/80 text-xs lg:text-sm font-medium">

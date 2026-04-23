@@ -134,14 +134,14 @@ export default function AdminLayout() {
         style={{ backgroundColor: '#006B3C' }}
       >
         {/* Logo */}
-        <div className="px-6 py-6 border-b border-white/10">
-          <h1
-            className="text-2xl font-bold text-white tracking-tight"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
-          >
-            Capvin13
-          </h1>
-          <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <div className="px-6 py-4 border-b border-white/10">
+          <img
+            src="/capvin.jpg"
+            alt="Capvin13"
+            className="h-10 w-auto object-contain"
+            style={{ mixBlendMode: 'multiply' }}
+          />
+          <p className="text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Panel i Adminit
           </p>
         </div>
