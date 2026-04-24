@@ -7,10 +7,19 @@ interface Props {
   onClose: () => void;
 }
 
+const KAFE_SIZES = ['E vogël', 'E mesme', 'E gjatë'];
+
 export default function OrderModal({ item, onClose }: Props) {
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
+  const [size, setSize] = useState('');
+
+  const catName = item.category?.name?.toUpperCase() ?? '';
+  const isPije = catName.includes('PIJE');
+  const isKafe = catName.includes('KAFE');
+  const showNotes = !isPije && !isKafe;
+  const canAdd = !isKafe || size !== '';
 
   const handleAdd = () => {
     addItem({
@@ -19,7 +28,7 @@ export default function OrderModal({ item, onClose }: Props) {
       price: Number(item.price),
       imageUrl: item.imageUrl,
       quantity,
-      notes,
+      notes: isKafe ? size : notes,
     });
     onClose();
   };
@@ -89,16 +98,46 @@ export default function OrderModal({ item, onClose }: Props) {
             </div>
           </div>
 
-          {/* Notes */}
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Shënime të veçanta: p.sh. pa kripë, pa qepë..."
-            rows={2}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none transition-colors mb-5"
-            onFocus={(e) => (e.currentTarget.style.borderColor = '#006B3C')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = '#e5e7eb')}
-          />
+          {/* Kafe: size selector */}
+          {isKafe && (
+            <div className="mb-5">
+              <label className="block text-xs text-gray-400 mb-2">Madhësia</label>
+              <div className="flex gap-2">
+                {KAFE_SIZES.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSize(s)}
+                    className="flex-1 py-2 px-3 rounded-xl text-sm font-medium border-2 transition-colors"
+                    style={{
+                      backgroundColor: size === s ? '#006B3C' : 'white',
+                      borderColor: '#006B3C',
+                      color: size === s ? 'white' : '#006B3C',
+                    }}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Other categories: short notes input */}
+          {showNotes && (
+            <div className="mb-5">
+              <label className="block text-xs text-gray-400 mb-1">Shënim</label>
+              <input
+                type="text"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="P.sh. pa qepë"
+                maxLength={100}
+                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-colors"
+                onFocus={(e) => (e.currentTarget.style.borderColor = '#006B3C')}
+                onBlur={(e) => (e.currentTarget.style.borderColor = '#e5e7eb')}
+              />
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex gap-3">
@@ -110,7 +149,8 @@ export default function OrderModal({ item, onClose }: Props) {
             </button>
             <button
               onClick={handleAdd}
-              className="flex-[2] py-3 rounded-xl text-white text-sm font-semibold transition-opacity hover:opacity-90"
+              disabled={!canAdd}
+              className="flex-[2] py-3 rounded-xl text-white text-sm font-semibold transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
               style={{ backgroundColor: '#006B3C' }}
             >
               Shto në porosi — €{total}

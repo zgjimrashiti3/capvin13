@@ -127,7 +127,7 @@ export default function MenuPage() {
                     key={item.id}
                     item={item}
                     cartQuantity={tableNumber ? getCartQty(item.id) : 0}
-                    onOrder={tableNumber ? setOrderingItem : undefined}
+                    onOrder={tableNumber ? (i) => setOrderingItem({ ...i, category: cat }) : undefined}
                     onAddOne={tableNumber ? handleAddOne : undefined}
                   />
                 ))

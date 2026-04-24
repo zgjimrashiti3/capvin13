@@ -67,10 +67,13 @@ async function seed() {
     lemonade:        'https://images.unsplash.com/photo-1523677011781-c91d1bbe2f9e?w=800',
     beer:            'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=800',
     juiceBottle:     'https://images.unsplash.com/photo-1534353341699-5a88e8842a0e?w=800',
+    scheppes:        'https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=800',
     bruschetta:      'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=800',
     croquettes:      'https://images.unsplash.com/photo-1529563021893-cc83c992d75d?w=800',
     appetizer:       'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=800',
     mozzarella:      'https://images.unsplash.com/photo-1567337710282-00832b415979?w=800',
+    pollastrella:    'https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=800',
+    paestum:         'https://images.unsplash.com/photo-1559561853-08451507cbe7?w=800',
     caprese:         'https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=800',
     greenSalad:      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800',
     mixedSalad:      'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800',
@@ -126,8 +129,8 @@ async function seed() {
       { name: 'Red Bull',                         imageUrl: IMG.redBull,     price: 3.0, sortOrder: 18 },
       { name: 'Rose Lemonade',                    imageUrl: IMG.lemonade,    price: 3.0, sortOrder: 19 },
       { name: 'Birra 0%',                         imageUrl: IMG.beer,        price: 1.5, sortOrder: 20 },
-      { name: 'Scheppes Bitter Lemon 0.25l',      imageUrl: IMG.lemonade,    price: 1.5, sortOrder: 21 },
-      { name: 'Scheppes Tonic Water 0.25l',       imageUrl: IMG.water,       price: 1.5, sortOrder: 22 },
+      { name: 'Scheppes Bitter Lemon 0.25l',      imageUrl: IMG.scheppes,    price: 1.5, sortOrder: 21 },
+      { name: 'Scheppes Tonic Water 0.25l',       imageUrl: IMG.scheppes,    price: 1.5, sortOrder: 22 },
     ]],
 
     // ── Antipasti (Picabërës + Mozzarella di Bufala + Sallatat) ──
@@ -140,10 +143,10 @@ async function seed() {
       { name: 'Brusketa me Domate',    description: 'Brusketa me domate të freskëta',    imageUrl: IMG.bruschetta, price: 2.5, sortOrder: 5  },
       // ex-Mozzarella di Bufala
       { name: 'Mozzarella di Bufala DOP', description: 'Mozzarella e importuar DOP',   imageUrl: IMG.mozzarella, price: 10.0, sortOrder: 6  },
-      { name: 'Mozzallerone',             description: 'Specialitet i shtëpisë',        imageUrl: IMG.mozzarella, price: 21.0, sortOrder: 7  },
-      { name: 'Pollastrella',                                                            imageUrl: IMG.mozzarella, price: 13.0, sortOrder: 8  },
+      { name: 'Mozzallerone',             description: 'Specialitet i shtëpisë',        imageUrl: IMG.mozzarella,   price: 21.0, sortOrder: 7  },
+      { name: 'Pollastrella',                                                            imageUrl: IMG.pollastrella, price: 13.0, sortOrder: 8  },
       { name: 'Caprese',                  description: 'Mozzarella Bufala DOP, domate', imageUrl: IMG.caprese,    price: 12.0, sortOrder: 9  },
-      { name: 'Paestum',                  description: 'Mozzarella Bufala DOP djathë',  imageUrl: IMG.mozzarella, price: 13.0, sortOrder: 10 },
+      { name: 'Paestum',                  description: 'Mozzarella Bufala DOP djathë',  imageUrl: IMG.paestum,    price: 13.0, sortOrder: 10 },
       // ex-Sallatat
       { name: 'Sallata e Gjelbër', imageUrl: IMG.greenSalad, price: 5.0, sortOrder: 11 },
       { name: 'Sallata Miks',      imageUrl: IMG.mixedSalad, price: 6.0, sortOrder: 12 },
