@@ -45,6 +45,8 @@ export default function MenuPage() {
   const [cartOpen, setCartOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement>>({});
 
+  const FOOD_CATS = new Set(['Antipasti', 'Pica Innovative', 'Pica Tradizionale', 'Pasta & Calzone']);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#006B3C' }}>
@@ -117,12 +119,28 @@ export default function MenuPage() {
               <div className="mt-2 h-0.5 w-10 rounded-full" style={{ backgroundColor: '#CE2B37' }} />
             </div>
 
-            {/* Mobile: single column list · Desktop: 2-column grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4">
-              {cat.items.length === 0 ? (
-                <p className="text-gray-400 col-span-2 text-sm italic">Nessun articolo in questa categoria.</p>
-              ) : (
-                cat.items.map((item) => (
+            {cat.items.length === 0 ? (
+              <p className="text-gray-400 text-sm italic">Nessun articolo in questa categoria.</p>
+            ) : FOOD_CATS.has(cat.name) ? (
+              /* Food: horizontal scroll + snap on mobile, 2-col md, 3-col lg */
+              <div className="-mx-3 px-3 scroll-pl-3 overflow-x-auto snap-x snap-mandatory pb-3 md:overflow-visible md:mx-0 md:px-0 md:scroll-pl-0 md:pb-0">
+                <div className="flex gap-3 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4">
+                  {cat.items.map((item) => (
+                    <div key={item.id} className="snap-start shrink-0 w-[82%] md:w-full">
+                      <ItemCard
+                        item={item}
+                        cartQuantity={tableNumber ? getCartQty(item.id) : 0}
+                        onOrder={tableNumber ? (i) => setOrderingItem({ ...i, category: cat }) : undefined}
+                        onAddOne={tableNumber ? handleAddOne : undefined}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              /* Kafe / Pije: 2-col on mobile, 2-col md, 3-col lg */
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+                {cat.items.map((item) => (
                   <ItemCard
                     key={item.id}
                     item={item}
@@ -130,9 +148,9 @@ export default function MenuPage() {
                     onOrder={tableNumber ? (i) => setOrderingItem({ ...i, category: cat }) : undefined}
                     onAddOne={tableNumber ? handleAddOne : undefined}
                   />
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         ))}
       </div>
