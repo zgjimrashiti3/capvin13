@@ -124,9 +124,9 @@ async function seed() {
       { name: 'Santal Pjeshkë 0.2l',              imageUrl: IMG.lemonade,    price: 1.5, sortOrder: 13 },
       { name: 'Santal Vishnje 0.2l',              imageUrl: IMG.freshJuice,  price: 1.5, sortOrder: 14 },
       { name: 'Santal ACE Multi 0.25l',           imageUrl: IMG.lemonade,    price: 1.5, sortOrder: 15 },
-      { name: 'Fructal dredhëza 0.2l',            imageUrl: IMG.juiceBottle, price: 1.5, sortOrder: 16 },
+      { name: 'Fructal dredhëza 0.2l',            imageUrl: IMG.freshJuice,  price: 1.5, sortOrder: 16 },
       { name: 'Fresh Juice',                      imageUrl: IMG.freshJuice,  price: 3.0, sortOrder: 17 },
-      { name: 'Red Bull',                         imageUrl: IMG.redBull,     price: 3.0, sortOrder: 18 },
+      { name: 'Red Bull',                         imageUrl: IMG.cola,        price: 3.0, sortOrder: 18 },
       { name: 'Rose Lemonade',                    imageUrl: IMG.lemonade,    price: 3.0, sortOrder: 19 },
       { name: 'Birra 0%',                         imageUrl: IMG.beer,        price: 1.5, sortOrder: 20 },
       { name: 'Scheppes Bitter Lemon 0.25l',      imageUrl: IMG.scheppes,    price: 1.5, sortOrder: 21 },
@@ -136,9 +136,9 @@ async function seed() {
     // ── Antipasti (Picabërës + Mozzarella di Bufala + Sallatat) ──
     [antipasti, [
       // ex-Picabërës
-      { name: 'Frittatina Napoletane', description: 'Frittatina tradicionale napoletane', imageUrl: IMG.appetizer,  price: 2.5, sortOrder: 1  },
-      { name: 'Montanar al Ragu',      description: 'Montanar me ragu',                  imageUrl: IMG.appetizer,  price: 2.5, sortOrder: 2  },
-      { name: 'Tris di Montanare',     description: '3 copë montanare të ndryshme',      imageUrl: IMG.appetizer,  price: 7.0, sortOrder: 3  },
+      { name: 'Frittatina Napoletane', description: 'Frittatina tradicionale napoletane', imageUrl: IMG.croquettes, price: 2.5, sortOrder: 1  },
+      { name: 'Montanar al Ragu',      description: 'Montanar me ragu',                  imageUrl: IMG.bruschetta, price: 2.5, sortOrder: 2  },
+      { name: 'Tris di Montanare',     description: '3 copë montanare të ndryshme',      imageUrl: IMG.mozzarella, price: 7.0, sortOrder: 3  },
       { name: 'Kroket Pataten',        description: 'Kroket me patate',                  imageUrl: IMG.croquettes, price: 2.5, sortOrder: 4  },
       { name: 'Brusketa me Domate',    description: 'Brusketa me domate të freskëta',    imageUrl: IMG.bruschetta, price: 2.5, sortOrder: 5  },
       // ex-Mozzarella di Bufala
@@ -156,7 +156,7 @@ async function seed() {
     [innovative, [
       { name: 'Centro Calabria',   description: 'Provola affumicata, salsiçe e djegës',            imageUrl: IMG.spicyPizza,      price: 12.0, sortOrder: 1  },
       { name: 'Don Vincenzo',      description: 'Pan polpo, açuka Pecorino Romano',                imageUrl: IMG.neapolitanPizza, price: 11.0, sortOrder: 2  },
-      { name: 'Domenike Lontano',  description: 'San Marzano, Mozzarella di Bufala DOP',           imageUrl: IMG.bufalaPizza,     price: 11.0, sortOrder: 3  },
+      { name: 'Domenike Lontano',  description: 'San Marzano, Mozzarella di Bufala DOP',           imageUrl: IMG.neapolitanPizza, price: 11.0, sortOrder: 3  },
       { name: 'Abbraccio e Mamà',  description: 'Salsa pomodoro, Mozzarella Fior di Latte',        imageUrl: IMG.margherita,      price:  8.0, sortOrder: 4  },
       { name: 'Napolitidine',      description: 'Salsa pomodoro, Grana Padano, Prosciutto',        imageUrl: IMG.prosciuttoPizza, price:  9.0, sortOrder: 5  },
       { name: 'Provola e Pepe',    description: 'Kampione e korës - me gjalpë e dorë',             imageUrl: IMG.cheesePizza,     price:  9.0, sortOrder: 6  },
@@ -170,8 +170,8 @@ async function seed() {
     [tradizionale, [
       { name: 'Marinara',                description: 'Salsa pomodoro San Marzano, aglio, origano',        imageUrl: IMG.marinara,        price:  7.0, sortOrder: 1 },
       { name: 'Margherita',              description: 'Salsa pomodoro, Fior di Latte, basiliko',           imageUrl: IMG.margherita,      price:  7.0, sortOrder: 2 },
-      { name: 'Margherita di Bufala',    description: 'Salsa pomodoro, Mozzarella di Bufala DOP',          imageUrl: IMG.bufalaPizza,     price:  9.0, sortOrder: 3 },
-      { name: 'Bufala a Filetto',        description: 'Pomodoro Filetto, Mozzarella di Bufala DOP',        imageUrl: IMG.bufalaPizza,     price: 12.0, sortOrder: 4 },
+      { name: 'Margherita di Bufala',    description: 'Salsa pomodoro, Mozzarella di Bufala DOP',          imageUrl: IMG.margherita,      price:  9.0, sortOrder: 3 },
+      { name: 'Bufala a Filetto',        description: 'Pomodoro Filetto, Mozzarella di Bufala DOP',        imageUrl: IMG.prosciuttoPizza, price: 12.0, sortOrder: 4 },
       { name: 'Napoli',                  description: 'Salsa pomodoro, Fior di latte, açukë, kapere',      imageUrl: IMG.neapolitanPizza, price:  8.0, sortOrder: 5 },
       { name: 'Diavola alla Nonno Enzo', description: 'Salsa pomodoro, Fior di Latte, salsiçe djegës',     imageUrl: IMG.spicyPizza,      price:  9.0, sortOrder: 6 },
       { name: 'Sguardo Alto',            description: 'Salsa pomodoro, Fior di latte, proshutë, kërpudha', imageUrl: IMG.mushroomPizza,   price: 10.0, sortOrder: 7 },
@@ -186,7 +186,7 @@ async function seed() {
       { name: 'Pasta Fruta Deti',      description: 'Pasta me fruta deti',             imageUrl: IMG.seafoodPasta, price: 9.0,  sortOrder: 3 },
       // ex-Calzone Napoletane
       { name: 'Calzone al Forno',      description: 'Fior di latte, salsiçe, salsa pomodoro',          imageUrl: IMG.calzone,    price: 9.0,  sortOrder: 4 },
-      { name: 'Pizza Fritta Completa', description: 'Ricotta, salsiçe, Fior di latte, salsa pomodoro', imageUrl: IMG.friedPizza,  price: 10.0, sortOrder: 5 },
+      { name: 'Pizza Fritta Completa', description: 'Ricotta, salsiçe, Fior di latte, salsa pomodoro', imageUrl: IMG.calzone,    price: 10.0, sortOrder: 5 },
     ]],
   ];
 
