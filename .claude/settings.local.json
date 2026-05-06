@@ -4,7 +4,8 @@
       "Bash(docker compose *)",
       "Bash(node *)",
       "Bash(npm install *)",
-      "Bash(npm uninstall *)"
+      "Bash(npm uninstall *)",
+      "Bash(docker exec capvin13-db-1 *)"
     ]
   }
 }

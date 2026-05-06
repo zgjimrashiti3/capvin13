@@ -97,9 +97,9 @@ async function seed() {
     // ── Kafe ──
     [kafe, [
       { name: 'Espresso',          imageUrl: IMG.espresso,   price: 1.2, sortOrder: 1 },
-      { name: 'Macchiato e Vogël', imageUrl: IMG.macchiato,  price: 1.2, sortOrder: 2 },
-      { name: 'Macchiato pa Plum', imageUrl: IMG.macchiato,  price: 1.2, sortOrder: 3 },
-      { name: 'Macchiato e Madhe', imageUrl: IMG.macchiato,  price: 1.5, sortOrder: 4 },
+      { name: 'Macchiato e Vogël', imageUrl: IMG.espresso,   price: 1.2, sortOrder: 2 },
+      { name: 'Macchiato pa Plum', imageUrl: IMG.cappuccino, price: 1.2, sortOrder: 3 },
+      { name: 'Macchiato e Madhe', imageUrl: IMG.frappe,     price: 1.5, sortOrder: 4 },
       { name: 'Cappuccino',        imageUrl: IMG.cappuccino, price: 1.5, sortOrder: 5 },
       { name: 'Illy Crema',        imageUrl: IMG.espresso,   price: 1.5, sortOrder: 6 },
       { name: 'Frappe',            imageUrl: IMG.frappe,     price: 1.5, sortOrder: 7 },
