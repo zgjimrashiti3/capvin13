@@ -9,6 +9,7 @@ import CartDrawer from '../components/CartDrawer';
 import FloatingCartButton from '../components/FloatingCartButton';
 import OrderHistoryButton from '../components/OrderHistoryButton';
 import OrderHistoryDrawer from '../components/OrderHistoryDrawer';
+import ScrollToTopButton from '../components/ScrollToTopButton';
 import { useCart } from '../context/CartContext';
 import { useSessionOrders } from '../context/SessionOrdersContext';
 import { useToast } from '../components/Toast';
@@ -193,6 +194,9 @@ export default function MenuPage() {
       {/* ── Order history button + drawer ── */}
       <OrderHistoryButton onClick={() => setHistoryOpen(true)} />
       <OrderHistoryDrawer open={historyOpen} onClose={() => setHistoryOpen(false)} />
+
+      {/* ── Scroll to top ── */}
+      <ScrollToTopButton />
 
       {/* ── Cart drawer ── */}
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />

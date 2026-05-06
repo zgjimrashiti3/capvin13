@@ -24,9 +24,11 @@ import { OrderItem } from './entities/order-item.entity';
         url: config.get('DATABASE_URL'),
         entities: [Category, MenuItem, User, Order, OrderItem],
         synchronize: true,
-        ssl: config.get('DATABASE_URL')?.includes('localhost')
-          ? false
-          : { rejectUnauthorized: false },
+        ssl:
+          config.get('DATABASE_URL')?.includes('localhost') ||
+          config.get('DATABASE_URL')?.includes('@db:')
+            ? false
+            : { rejectUnauthorized: false },
       }),
       inject: [ConfigService],
     }),
