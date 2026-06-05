@@ -139,11 +139,3 @@ The frontend is a fully installable PWA:
 - Manifest with restaurant theme colors
 
 ## Admin Credentials
-
-# test
-```
-Username: admin
-Password: admin123
-```
-
-# test 1 2
