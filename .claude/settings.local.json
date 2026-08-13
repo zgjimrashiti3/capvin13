@@ -5,7 +5,11 @@
       "Bash(node *)",
       "Bash(npm install *)",
       "Bash(npm uninstall *)",
-      "Bash(docker exec capvin13-db-1 *)"
+      "Bash(docker exec capvin13-db-1 *)",
+      "Bash(docker --version)",
+      "Bash(curl *)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)"
     ]
   }
 }

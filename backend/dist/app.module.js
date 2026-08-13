@@ -36,7 +36,8 @@ exports.AppModule = AppModule = __decorate([
                     url: config.get('DATABASE_URL'),
                     entities: [category_entity_1.Category, menu_item_entity_1.MenuItem, user_entity_1.User, order_entity_1.Order, order_item_entity_1.OrderItem],
                     synchronize: true,
-                    ssl: config.get('DATABASE_URL')?.includes('localhost')
+                    ssl: config.get('DATABASE_URL')?.includes('localhost') ||
+                        config.get('DATABASE_URL')?.includes('@db:')
                         ? false
                         : { rejectUnauthorized: false },
                 }),
