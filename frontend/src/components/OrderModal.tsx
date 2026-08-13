@@ -16,9 +16,7 @@ export default function OrderModal({ item, onClose }: Props) {
   const [size, setSize] = useState('');
 
   const catName = item.category?.name?.toUpperCase() ?? '';
-  const isPije = catName.includes('PIJE');
   const isKafe = catName.includes('KAFE');
-  const showNotes = !isPije && !isKafe;
   const canAdd = !isKafe || size !== '';
 
   const handleAdd = () => {
@@ -28,7 +26,7 @@ export default function OrderModal({ item, onClose }: Props) {
       price: Number(item.price),
       imageUrl: item.imageUrl,
       quantity,
-      notes: isKafe ? size : notes,
+      notes: isKafe ? [size, notes].filter(Boolean).join(' — ') : notes,
     });
     onClose();
   };
@@ -122,22 +120,19 @@ export default function OrderModal({ item, onClose }: Props) {
             </div>
           )}
 
-          {/* Other categories: short notes input */}
-          {showNotes && (
-            <div className="mb-5">
-              <label className="block text-xs text-gray-400 mb-1">Shënim</label>
-              <input
-                type="text"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="P.sh. pa qepë"
-                maxLength={100}
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-colors"
-                onFocus={(e) => (e.currentTarget.style.borderColor = '#006B3C')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = '#e5e7eb')}
-              />
-            </div>
-          )}
+          {/* Special request / notes — available for every product */}
+          <div className="mb-5">
+            <label className="block text-xs text-gray-400 mb-1">Diçka speciale? (opsionale)</label>
+            <input
+              type="text"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              maxLength={100}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none transition-colors"
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#006B3C')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = '#e5e7eb')}
+            />
+          </div>
 
           {/* Actions */}
           <div className="flex gap-3">
