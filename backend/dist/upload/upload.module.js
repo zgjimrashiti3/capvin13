@@ -14,6 +14,7 @@ const multer_1 = require("multer");
 const path_1 = require("path");
 const uuid_1 = require("uuid");
 const upload_controller_1 = require("./upload.controller");
+const ALLOWED_EXTENSIONS = /\.(jpg|jpeg|jfif|png|gif|webp|bmp)$/i;
 let UploadModule = class UploadModule {
 };
 exports.UploadModule = UploadModule;
@@ -30,8 +31,11 @@ exports.UploadModule = UploadModule = __decorate([
                         },
                     }),
                     fileFilter: (_req, file, cb) => {
-                        const allowed = /\.(jpg|jpeg|png|gif|webp)$/i;
-                        cb(null, allowed.test(file.originalname));
+                        if (!ALLOWED_EXTENSIONS.test(file.originalname)) {
+                            cb(new common_1.BadRequestException('Lloji i skedarit nuk mbështetet. Përdorni JPG, JFIF, PNG, GIF, WEBP ose BMP. Nëse e keni bërë foton me iPhone, ndrysho formatin te Cilësimet > Kamera > Formatet në "Më i Përputhshëm".'), false);
+                            return;
+                        }
+                        cb(null, true);
                     },
                     limits: { fileSize: 5 * 1024 * 1024 },
                 }),

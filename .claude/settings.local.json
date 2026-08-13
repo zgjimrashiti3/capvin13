@@ -9,7 +9,9 @@
       "Bash(docker --version)",
       "Bash(curl *)",
       "Bash(npm run *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(cp \"/c/Users/zgjim/GitHub/capvin13/capvin.jpg\" \"/c/Users/zgjim/AppData/Local/Temp/claude/C--Users-zgjim-GitHub-capvin13/a248eaef-082c-4801-9fda-e133e6a77dd1/scratchpad/test-image.heic\")",
+      "Read(//c/Users/zgjim/AppData/Local/Temp/claude/C--Users-zgjim-GitHub-capvin13/a248eaef-082c-4801-9fda-e133e6a77dd1/scratchpad//**)"
     ]
   }
 }

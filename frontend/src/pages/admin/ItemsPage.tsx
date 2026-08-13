@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getMenuItems, createMenuItem, updateMenuItem,
@@ -48,8 +49,12 @@ function ItemModal({
     try {
       const { url } = await uploadImage(file);
       setImageUrl(url);
-    } catch {
-      showToast('Ngarkimi i imazhit dështoi', 'error');
+    } catch (err) {
+      setImageUrl('');
+      setImagePreview('');
+      if (fileRef.current) fileRef.current.value = '';
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : undefined;
+      showToast(message || 'Ngarkimi i imazhit dështoi', 'error');
     } finally {
       setUploading(false);
     }
