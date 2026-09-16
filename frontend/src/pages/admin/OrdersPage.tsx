@@ -66,7 +66,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, updating }: OrderDet
             </h3>
             <p className="text-sm text-gray-400">Tavolina {order.tableNumber} • {formatTime(order.createdAt)}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none p-2 -m-2">×</button>
         </div>
 
         <div className="px-6 py-5 space-y-3">

@@ -76,7 +76,7 @@ export default function QRSection() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
           QR Kodi
         </h1>
         <p className="text-gray-500 text-sm mt-1">Printo dhe vendos këtë kod QR në tavolinat e restorantit</p>
@@ -84,12 +84,12 @@ export default function QRSection() {
 
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         {/* QR card */}
-        <div className="bg-white rounded-xl shadow-sm p-8 text-center flex-shrink-0">
+        <div className="bg-white rounded-xl shadow-sm p-5 sm:p-8 text-center flex-shrink-0 w-full lg:w-auto">
           <div
-            className="inline-block p-5 rounded-xl mb-5"
+            className="inline-block p-3 sm:p-5 rounded-xl mb-5"
             style={{ border: '2px solid rgba(0,107,60,0.12)' }}
           >
-            <canvas ref={canvasRef} />
+            <canvas ref={canvasRef} className="max-w-full h-auto" />
           </div>
 
           <p className="text-xs text-gray-400 mb-1">Drejtimi:</p>
@@ -221,13 +221,13 @@ export default function QRSection() {
           </div>
 
           {/* QR preview card */}
-          <div className="bg-white rounded-xl shadow-sm p-8 text-center flex-shrink-0 w-full lg:w-auto">
+          <div className="bg-white rounded-xl shadow-sm p-5 sm:p-8 text-center flex-shrink-0 w-full lg:w-auto">
             <div
-              className="inline-flex items-center justify-center p-5 rounded-xl mb-5"
-              style={{ border: '2px solid rgba(0,107,60,0.12)', width: 260, height: 260 }}
+              className="flex items-center justify-center p-3 sm:p-5 rounded-xl mb-5 mx-auto w-full max-w-[260px] aspect-square"
+              style={{ border: '2px solid rgba(0,107,60,0.12)' }}
             >
               {hasWifiQr ? (
-                <canvas ref={wifiCanvasRef} />
+                <canvas ref={wifiCanvasRef} className="max-w-full h-auto" />
               ) : (
                 <p className="text-gray-400 text-sm px-4">
                   Shkruaj emrin e rrjetit (SSID) për të parë kodin QR

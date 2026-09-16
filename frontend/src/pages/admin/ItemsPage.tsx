@@ -242,9 +242,9 @@ export default function ItemsSection({ triggerAdd, onTriggerConsumed }: SectionP
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
             Artikujt
           </h1>
           <p className="text-gray-500 text-sm mt-1">{filtered?.length ?? 0} artikuj</p>
@@ -280,7 +280,7 @@ export default function ItemsSection({ triggerAdd, onTriggerConsumed }: SectionP
           <div className="w-8 h-8 border-4 border-[#006B3C] border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
             <thead style={{ backgroundColor: '#f8f8f8' }}>
               <tr>

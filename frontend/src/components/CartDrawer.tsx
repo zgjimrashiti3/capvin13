@@ -16,7 +16,7 @@ function QuantityRow({ item, onQty }: { item: CartItem; onQty: (id: string, qty:
       <div className="flex items-center gap-2">
         <button
           onClick={() => onQty(item.menuItemId, item.quantity - 1)}
-          className="w-6 h-6 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:border-gray-400 transition-colors flex items-center justify-center"
+          className="w-8 h-8 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:border-gray-400 transition-colors flex items-center justify-center"
           title={item.quantity === 1 ? 'Hiq nga shporta' : ''}
         >
           −
@@ -25,7 +25,7 @@ function QuantityRow({ item, onQty }: { item: CartItem; onQty: (id: string, qty:
         <button
           onClick={() => onQty(item.menuItemId, item.quantity + 1)}
           disabled={item.quantity >= 20}
-          className="w-6 h-6 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:border-gray-400 disabled:opacity-30 transition-colors flex items-center justify-center"
+          className="w-8 h-8 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:border-gray-400 disabled:opacity-30 transition-colors flex items-center justify-center"
         >
           +
         </button>
@@ -110,7 +110,7 @@ export default function CartDrawer({ open, onClose }: Props) {
             </svg>
             <h2 className="text-white font-semibold text-base">Shporta ({totalItems})</h2>
           </div>
-          <button onClick={handleClose} className="text-white/80 hover:text-white transition-colors text-2xl leading-none">×</button>
+          <button onClick={handleClose} className="text-white/80 hover:text-white transition-colors text-2xl leading-none p-2 -m-2">×</button>
         </div>
 
         {/* Items */}
@@ -143,7 +143,7 @@ export default function CartDrawer({ open, onClose }: Props) {
                         </p>
                         <button
                           onClick={() => removeItem(item.menuItemId)}
-                          className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 text-lg leading-none mt-0.5"
+                          className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 text-lg leading-none p-1 -m-1"
                         >
                           ×
                         </button>
