@@ -44,13 +44,13 @@ export default function LoginPage() {
           <div className="mb-6 text-5xl">🇮🇹</div>
           <h1
             className="text-6xl font-bold text-white mb-4 drop-shadow-lg"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif', letterSpacing: '-1px' }}
+            style={{ fontFamily: '"Fraunces", Georgia, serif', letterSpacing: '-1px' }}
           >
             Capvin13
           </h1>
           <p
             className="text-xl text-white/90 italic"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif', fontStyle: 'italic' }}
+            style={{ fontFamily: '"Fraunces", Georgia, serif', fontStyle: 'italic' }}
           >
             Sapori autentici di Napoli
           </p>
@@ -77,7 +77,7 @@ export default function LoginPage() {
         <div className="md:hidden text-center mb-10">
           <h1
             className="text-3xl font-bold mt-2"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif', color: '#006B3C' }}
+            style={{ fontFamily: '"Fraunces", Georgia, serif', color: '#006B3C' }}
           >
             Capvin13
           </h1>
@@ -88,7 +88,7 @@ export default function LoginPage() {
           <div className="mb-8">
             <h2
               className="text-2xl font-bold text-[#1a1a1a]"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+              style={{ fontFamily: '"Fraunces", Georgia, serif' }}
             >
               Hyrja e Adminit
             </h2>

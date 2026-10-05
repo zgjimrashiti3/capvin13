@@ -68,8 +68,8 @@ export default function ItemCard({ item, cartQuantity = 0, onOrder, onAddOne }: 
       {/* Content */}
       <div className="p-3 md:p-4 flex flex-col flex-1">
         <h3
-          className="font-semibold text-[#1a1a1a] text-sm md:text-base leading-tight"
-          style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+          className="font-normal text-[#1a1a1a] text-sm md:text-base leading-tight"
+          style={{ fontFamily: '"Fraunces", Georgia, serif' }}
         >
           {item.name}
         </h3>
@@ -109,7 +109,7 @@ export default function ItemCard({ item, cartQuantity = 0, onOrder, onAddOne }: 
             ) : (
               <button
                 onClick={() => onOrder?.(item)}
-                className="w-full py-1.5 rounded-lg text-white text-xs font-semibold transition-opacity hover:opacity-90 active:scale-95"
+                className="w-full py-1.5 rounded-lg text-white text-xs font-normal transition-opacity hover:opacity-90 active:scale-95"
                 style={{ backgroundColor: '#CE2B37' }}
               >
                 Porosit

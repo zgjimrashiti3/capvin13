@@ -66,7 +66,7 @@ export default function OrderModal({ item, onClose }: Props) {
         <div className="px-6 py-5">
           <h3
             className="text-xl font-bold text-[#1a1a1a] mb-1"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+            style={{ fontFamily: '"Fraunces", Georgia, serif' }}
           >
             {item.name}
           </h3>

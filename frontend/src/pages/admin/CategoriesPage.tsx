@@ -34,7 +34,7 @@ function CategoryModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <h2 className="text-lg font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
             {initial ? 'Ndrysho Kategori' : 'Shto Kategori të Re'}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -144,7 +144,7 @@ export default function CategoriesSection({ triggerAdd, onTriggerConsumed }: Sec
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
             Kategoritë
           </h1>
           <p className="text-gray-500 text-sm mt-1">{categories?.length ?? 0} kategori gjithsej</p>

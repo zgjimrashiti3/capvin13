@@ -117,7 +117,7 @@ export default function OrderHistoryDrawer({ open, onClose }: Props) {
                       <div>
                         <p
                           className="font-bold text-sm text-[#1a1a1a]"
-                          style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+                          style={{ fontFamily: '"Fraunces", Georgia, serif' }}
                         >
                           Porosia #{order.orderNumber}
                         </p>

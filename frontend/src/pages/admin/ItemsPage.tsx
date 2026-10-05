@@ -76,7 +76,7 @@ function ItemModal({
     <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 my-8">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <h2 className="text-lg font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
             {initial ? 'Ndrysho Artikullin' : 'Shto Artikull të Ri'}
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -244,7 +244,7 @@ export default function ItemsSection({ triggerAdd, onTriggerConsumed }: SectionP
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
             Artikujt
           </h1>
           <p className="text-gray-500 text-sm mt-1">{filtered?.length ?? 0} artikuj</p>

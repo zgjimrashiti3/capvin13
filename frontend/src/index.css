@@ -25,7 +25,7 @@
   }
 
   h1, h2, h3 {
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
     line-height: 1.2;
   }
 }
@@ -40,7 +40,7 @@
   }
 
   .font-playfair {
-    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
   }
 
   .font-inter {

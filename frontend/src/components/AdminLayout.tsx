@@ -234,7 +234,7 @@ export default function AdminLayout() {
           </button>
           <span
             className="text-lg font-bold text-white"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+            style={{ fontFamily: '"Fraunces", Georgia, serif' }}
           >
             {sectionTitles[activeSection]}
           </span>

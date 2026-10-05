@@ -61,7 +61,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, updating }: OrderDet
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-6 py-4 border-b sticky top-0 bg-white rounded-t-2xl">
           <div>
-            <h3 className="font-bold text-[#1a1a1a] text-lg" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+            <h3 className="font-bold text-[#1a1a1a] text-lg" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
               Porosia #{shortId(order.id)}
             </h3>
             <p className="text-sm text-gray-400">Tavolina {order.tableNumber} • {formatTime(order.createdAt)}</p>
@@ -80,7 +80,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, updating }: OrderDet
                 )}
               </div>
               <div className="flex-1">
-                <p className="font-semibold text-sm text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+                <p className="font-semibold text-sm text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
                   {item.menuItem?.name ?? 'Artikull i fshirë'}
                 </p>
                 {item.notes && <p className="text-xs text-gray-400 italic mt-0.5">{item.notes}</p>}
@@ -149,7 +149,7 @@ export default function OrdersPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <h2 className="text-2xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
             Porositë
           </h2>
           <p className="text-gray-400 text-sm mt-0.5">Menaxho porositë e klientëve</p>

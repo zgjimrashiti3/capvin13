@@ -118,7 +118,7 @@ export default function MenuPage() {
             <div className="mb-4">
               <h2
                 className="text-xl lg:text-2xl font-bold text-[#1a1a1a]"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+                style={{ fontFamily: '"Fraunces", Georgia, serif' }}
               >
                 {cat.name}
               </h2>
@@ -182,7 +182,7 @@ export default function MenuPage() {
             </span>
           </a>
           <div className="border-t border-white/10 my-5" />
-          <p className="text-white text-lg font-bold mb-1" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <p className="text-white text-lg font-bold mb-1" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
             🇮🇹 Capvin13 — Napoli, Italia
           </p>
           <p className="text-white/50 text-xs mt-2">

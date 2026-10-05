@@ -76,7 +76,7 @@ export default function QRSection() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
           QR Kodi
         </h1>
         <p className="text-gray-500 text-sm mt-1">Printo dhe vendos këtë kod QR në tavolinat e restorantit</p>
@@ -168,7 +168,7 @@ export default function QRSection() {
       {/* WiFi QR Generator */}
       <div className="mt-10">
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+          <h2 className="text-xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
             QR Kodi për WiFi
           </h2>
           <p className="text-gray-500 text-sm mt-1">

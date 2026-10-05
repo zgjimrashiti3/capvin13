@@ -138,7 +138,7 @@ export default function CartDrawer({ open, onClose }: Props) {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <p className="font-semibold text-sm text-[#1a1a1a] leading-tight" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+                        <p className="font-semibold text-sm text-[#1a1a1a] leading-tight" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
                           {item.name}
                         </p>
                         <button

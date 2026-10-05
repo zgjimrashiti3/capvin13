@@ -27,7 +27,7 @@ export default function TableModal({ onDone }: Props) {
         <div className="px-8 py-8 text-center" style={{ backgroundColor: '#006B3C' }}>
           <h1
             className="text-2xl font-bold text-white"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+            style={{ fontFamily: '"Fraunces", Georgia, serif' }}
           >
             {tableNumber ? 'Ndrysho tavolinën' : 'Mirë se vini në Capvin13'}
           </h1>

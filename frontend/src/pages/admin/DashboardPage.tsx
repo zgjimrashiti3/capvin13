@@ -41,7 +41,7 @@ export default function DashboardSection({ onQuickAdd }: Props) {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+        <h1 className="text-3xl font-bold text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
           Dashboard
         </h1>
         <p className="text-gray-500 text-sm mt-1">Pasqyrë e menusë suaj të restorantit</p>
@@ -58,7 +58,7 @@ export default function DashboardSection({ onQuickAdd }: Props) {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{s.label}</p>
-                <p className="text-4xl font-bold mt-2" style={{ color: s.valueColor, fontFamily: '"Playfair Display", Georgia, serif' }}>
+                <p className="text-4xl font-bold mt-2" style={{ color: s.valueColor, fontFamily: '"Fraunces", Georgia, serif' }}>
                   {s.value}
                 </p>
               </div>
