@@ -9,11 +9,11 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Restaurant Menu',
-        short_name: 'Menu',
-        description: 'Browse our delicious menu',
-        theme_color: '#c97215',
-        background_color: '#1a0f02',
+        name: 'Capvin13',
+        short_name: 'Capvin13',
+        description: 'Capvin13 — Sapori autentici di Napoli',
+        theme_color: '#006B3C',
+        background_color: '#ffffff',
         display: 'standalone',
         start_url: '/menu',
         icons: [
