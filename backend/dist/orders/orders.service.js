@@ -19,14 +19,16 @@ const typeorm_2 = require("typeorm");
 const order_entity_1 = require("../entities/order.entity");
 const order_item_entity_1 = require("../entities/order-item.entity");
 const menu_item_entity_1 = require("../entities/menu-item.entity");
+const order_events_service_1 = require("./order-events.service");
 let OrdersService = class OrdersService {
-    constructor(orderRepo, menuItemRepo, dataSource) {
+    constructor(orderRepo, menuItemRepo, dataSource, orderEvents) {
         this.orderRepo = orderRepo;
         this.menuItemRepo = menuItemRepo;
         this.dataSource = dataSource;
+        this.orderEvents = orderEvents;
     }
     async create(dto) {
-        return this.dataSource.transaction(async (manager) => {
+        const order = await this.dataSource.transaction(async (manager) => {
             const menuItemIds = dto.items.map((i) => i.menuItemId);
             const menuItems = await manager.findBy(menu_item_entity_1.MenuItem, { id: (0, typeorm_2.In)(menuItemIds) });
             if (menuItems.length !== menuItemIds.length) {
@@ -62,6 +64,8 @@ let OrdersService = class OrdersService {
                 relations: { items: { menuItem: true } },
             });
         });
+        this.orderEvents.emit('order.created', order);
+        return order;
     }
     async findAll(status, date) {
         const qb = this.orderRepo
@@ -77,6 +81,13 @@ let OrdersService = class OrdersService {
         }
         return qb.getMany();
     }
+    async findAlerts() {
+        return this.orderRepo.find({
+            where: { status: order_entity_1.OrderStatus.PENDING, acknowledgedAt: (0, typeorm_2.IsNull)() },
+            relations: { items: { menuItem: true } },
+            order: { createdAt: 'ASC' },
+        });
+    }
     async findOne(id) {
         const order = await this.orderRepo.findOne({
             where: { id },
@@ -89,8 +100,21 @@ let OrdersService = class OrdersService {
     async updateStatus(id, dto) {
         const order = await this.findOne(id);
         order.status = dto.status;
+        order.acknowledgedAt ??= new Date();
         await this.orderRepo.save(order);
-        return this.findOne(id);
+        const updated = await this.findOne(id);
+        this.orderEvents.emit('order.updated', updated);
+        return updated;
+    }
+    async acknowledge(id) {
+        const order = await this.findOne(id);
+        if (order.acknowledgedAt)
+            return order;
+        order.acknowledgedAt = new Date();
+        await this.orderRepo.save(order);
+        const updated = await this.findOne(id);
+        this.orderEvents.emit('order.updated', updated);
+        return updated;
     }
 };
 exports.OrdersService = OrdersService;
@@ -101,6 +125,7 @@ exports.OrdersService = OrdersService = __decorate([
     __param(2, (0, typeorm_1.InjectDataSource)()),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
-        typeorm_2.DataSource])
+        typeorm_2.DataSource,
+        order_events_service_1.OrderEventsService])
 ], OrdersService);
 //# sourceMappingURL=orders.service.js.map

@@ -8,6 +8,8 @@ import ItemsSection from '../pages/admin/ItemsPage';
 import QRSection from '../pages/admin/QRCodePage';
 import OrdersSection from '../pages/admin/OrdersPage';
 import { getOrders } from '../api/orders';
+import { OrderAlertsProvider, useOrderAlerts } from '../context/OrderAlertsContext';
+import OrderAlertPanel, { OrderAlertControls } from './OrderAlertPanel';
 
 export type AdminSection = 'dashboard' | 'categories' | 'items' | 'qr' | 'orders';
 
@@ -74,6 +76,14 @@ const sectionTitles: Record<AdminSection, string> = {
 };
 
 export default function AdminLayout() {
+  return (
+    <OrderAlertsProvider>
+      <AdminLayoutContent />
+    </OrderAlertsProvider>
+  );
+}
+
+function AdminLayoutContent() {
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pendingAdd, setPendingAdd] = useState<null | 'categories' | 'items'>(null);
@@ -87,15 +97,27 @@ export default function AdminLayout() {
   });
 
   const pendingCount = pendingOrders.length;
+  const { alerts } = useOrderAlerts();
+  const unseenCount = alerts.length;
 
   useEffect(() => {
-    if (pendingCount > 0) {
-      document.title = `🔴 (${pendingCount}) Porosi të reja — Capvin13`;
-    } else {
-      document.title = 'Capvin13 — Admin';
+    if (unseenCount > 0) {
+      // Flash the title so unseen orders are noticed even from another tab.
+      const alertTitle = `🔔 (${unseenCount}) Porosi të reja — Capvin13`;
+      let flash = true;
+      document.title = alertTitle;
+      const id = setInterval(() => {
+        flash = !flash;
+        document.title = flash ? alertTitle : '‼️ Porosi e re!';
+      }, 1000);
+      return () => {
+        clearInterval(id);
+        document.title = 'Capvin13';
+      };
     }
+    document.title = pendingCount > 0 ? `🔴 (${pendingCount}) Në pritje — Capvin13` : 'Capvin13 — Admin';
     return () => { document.title = 'Capvin13'; };
-  }, [pendingCount]);
+  }, [unseenCount, pendingCount]);
 
   const handleNavClick = (section: AdminSection) => {
     setActiveSection(section);
@@ -169,7 +191,14 @@ export default function AdminLayout() {
               >
                 <span className={isActive ? 'text-[#006B3C]' : 'text-white/70'}>{icon}</span>
                 <span className="flex-1 text-left">{label}</span>
-                {showBadge && (
+                {badge && unseenCount > 0 ? (
+                  <span
+                    className="min-w-[20px] h-5 px-1.5 rounded-full text-[11px] font-bold text-white flex items-center justify-center animate-pulse"
+                    style={{ backgroundColor: '#CE2B37' }}
+                  >
+                    {unseenCount}
+                  </span>
+                ) : showBadge && (
                   <span className="relative flex h-2.5 w-2.5">
                     <span
                       className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
@@ -185,6 +214,11 @@ export default function AdminLayout() {
             );
           })}
         </nav>
+
+        {/* Live order alerts status */}
+        <div className="px-4 py-3 border-t border-white/10">
+          <OrderAlertControls />
+        </div>
 
         {/* User + logout */}
         <div className="px-4 py-4 border-t border-white/10">
@@ -233,11 +267,21 @@ export default function AdminLayout() {
             )}
           </button>
           <span
-            className="text-lg font-bold text-white"
+            className="flex-1 text-lg font-bold text-white"
             style={{ fontFamily: '"Fraunces", Georgia, serif' }}
           >
             {sectionTitles[activeSection]}
           </span>
+          {unseenCount > 0 && (
+            <button
+              onClick={() => handleNavClick('orders')}
+              className="px-2 py-0.5 rounded-full text-xs font-bold text-white animate-pulse"
+              style={{ backgroundColor: '#CE2B37' }}
+            >
+              🔔 {unseenCount}
+            </button>
+          )}
+          <OrderAlertControls compact />
         </header>
 
         {/* Content */}
@@ -261,6 +305,8 @@ export default function AdminLayout() {
           {activeSection === 'qr' && <QRSection />}
         </main>
       </div>
+
+      <OrderAlertPanel onShowOrders={() => handleNavClick('orders')} />
     </div>
   );
 }

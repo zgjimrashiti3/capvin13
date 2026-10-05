@@ -44,6 +44,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Order.prototype, "totalPrice", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ name: 'acknowledged_at', type: 'timestamptz', nullable: true }),
+    __metadata("design:type", Date)
+], Order.prototype, "acknowledgedAt", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)({ name: 'created_at', type: 'timestamptz' }),
     __metadata("design:type", Date)
 ], Order.prototype, "createdAt", void 0);

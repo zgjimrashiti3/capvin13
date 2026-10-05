@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getOrders, updateOrderStatus } from '../../api/orders';
+import { getOrders, isAlertOrder, updateOrderStatus } from '../../api/orders';
 import type { Order, OrderStatus } from '../../types';
 import { useToast } from '../../components/Toast';
+import { useOrderAlerts } from '../../context/OrderAlertsContext';
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
   PENDING: 'Në pritje',
@@ -123,8 +124,9 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const { showToast } = useToast();
   const queryClient = useQueryClient();
+  const { applyOrder, acknowledge } = useOrderAlerts();
 
-  const { data: orders = [], isLoading } = useQuery({
+  const { data: rawOrders = [], isLoading } = useQuery({
     queryKey: ['orders', activeTab],
     queryFn: () => getOrders(activeTab === 'ALL' ? undefined : activeTab),
     refetchInterval: 15000,
@@ -135,11 +137,16 @@ export default function OrdersPage() {
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       queryClient.invalidateQueries({ queryKey: ['orders-pending-count'] });
+      applyOrder(updated);
       setSelectedOrder(updated);
       showToast('Statusi u përditësua.', 'success');
     },
     onError: () => showToast('Gabim gjatë përditësimit.', 'error'),
   });
+
+  // Unacknowledged new orders stay pinned to the top (oldest first), then everything else newest first.
+  const unseen = rawOrders.filter(isAlertOrder).reverse();
+  const orders = [...unseen, ...rawOrders.filter((o) => !isAlertOrder(o))];
 
   const pending = orders.filter((o) => o.status === 'PENDING').length;
   const confirmed = orders.filter((o) => o.status === 'CONFIRMED').length;
@@ -216,13 +223,22 @@ export default function OrdersPage() {
               <tbody className="divide-y divide-gray-50">
                 {orders.map((order) => {
                   const colors = STATUS_COLORS[order.status];
+                  const isNew = isAlertOrder(order);
                   return (
                     <tr
                       key={order.id}
-                      className="hover:bg-gray-50 transition-colors cursor-pointer"
+                      className={`transition-colors cursor-pointer ${isNew ? 'hover:bg-red-50' : 'hover:bg-gray-50'}`}
+                      style={isNew ? { backgroundColor: 'rgba(206,43,55,0.06)', boxShadow: 'inset 4px 0 0 #CE2B37' } : undefined}
                       onClick={() => setSelectedOrder(order)}
                     >
-                      <td className="px-5 py-3.5 font-mono text-xs text-gray-500">#{shortId(order.id)}</td>
+                      <td className="px-5 py-3.5 font-mono text-xs text-gray-500">
+                        #{shortId(order.id)}
+                        {isNew && (
+                          <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-bold text-white animate-pulse" style={{ backgroundColor: '#CE2B37' }}>
+                            E RE
+                          </span>
+                        )}
+                      </td>
                       <td className="px-5 py-3.5 font-semibold text-[#1a1a1a]">{order.tableNumber}</td>
                       <td className="px-5 py-3.5 text-gray-500 hidden md:table-cell max-w-[200px] truncate">{itemsSummary(order)}</td>
                       <td className="px-5 py-3.5 font-semibold" style={{ color: '#CE2B37' }}>€{Number(order.totalPrice).toFixed(2)}</td>
@@ -237,6 +253,14 @@ export default function OrdersPage() {
                       </td>
                       <td className="px-5 py-3.5" onClick={(e) => e.stopPropagation()}>
                         <div className="flex gap-1.5">
+                          {isNew && (
+                            <button
+                              onClick={() => acknowledge(order.id)}
+                              className="px-2.5 py-1 rounded-lg text-xs font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
+                            >
+                              E pashë
+                            </button>
+                          )}
                           {order.status === 'PENDING' && (
                             <>
                               <button

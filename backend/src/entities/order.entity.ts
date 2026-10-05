@@ -34,6 +34,10 @@ export class Order {
   @Column({ name: 'total_price', type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
+  // Set when an admin has seen the order alert (via "Seen", "Accept" or any status change).
+  @Column({ name: 'acknowledged_at', type: 'timestamptz', nullable: true })
+  acknowledgedAt: Date | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

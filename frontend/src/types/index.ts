@@ -54,6 +54,7 @@ export interface Order {
   tableNumber: number;
   status: OrderStatus;
   totalPrice: number;
+  acknowledgedAt: string | null;
   createdAt: string;
   updatedAt: string;
   items: OrderItem[];

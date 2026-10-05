@@ -11,6 +11,7 @@ export declare class Order {
     tableNumber: number;
     status: OrderStatus;
     totalPrice: number;
+    acknowledgedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
     items: OrderItem[];

@@ -1,11 +1,12 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
-import { Repository, DataSource, In } from 'typeorm';
+import { Repository, DataSource, In, IsNull } from 'typeorm';
 import { Order, OrderStatus } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
 import { MenuItem } from '../entities/menu-item.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { OrderEventsService } from './order-events.service';
 
 @Injectable()
 export class OrdersService {
@@ -13,10 +14,11 @@ export class OrdersService {
     @InjectRepository(Order) private orderRepo: Repository<Order>,
     @InjectRepository(MenuItem) private menuItemRepo: Repository<MenuItem>,
     @InjectDataSource() private dataSource: DataSource,
+    private orderEvents: OrderEventsService,
   ) {}
 
   async create(dto: CreateOrderDto): Promise<Order> {
-    return this.dataSource.transaction(async (manager) => {
+    const order = await this.dataSource.transaction(async (manager) => {
       const menuItemIds = dto.items.map((i) => i.menuItemId);
       const menuItems = await manager.findBy(MenuItem, { id: In(menuItemIds) });
 
@@ -64,6 +66,10 @@ export class OrdersService {
         relations: { items: { menuItem: true } },
       });
     });
+
+    // Emit only after the transaction has committed.
+    this.orderEvents.emit('order.created', order);
+    return order;
   }
 
   async findAll(status?: string, date?: string): Promise<Order[]> {
@@ -84,6 +90,15 @@ export class OrdersService {
     return qb.getMany();
   }
 
+  // New orders no admin has seen yet, oldest first.
+  async findAlerts(): Promise<Order[]> {
+    return this.orderRepo.find({
+      where: { status: OrderStatus.PENDING, acknowledgedAt: IsNull() },
+      relations: { items: { menuItem: true } },
+      order: { createdAt: 'ASC' },
+    });
+  }
+
   async findOne(id: string): Promise<Order> {
     const order = await this.orderRepo.findOne({
       where: { id },
@@ -96,7 +111,20 @@ export class OrdersService {
   async updateStatus(id: string, dto: UpdateOrderStatusDto): Promise<Order> {
     const order = await this.findOne(id);
     order.status = dto.status;
+    order.acknowledgedAt ??= new Date();
     await this.orderRepo.save(order);
-    return this.findOne(id);
+    const updated = await this.findOne(id);
+    this.orderEvents.emit('order.updated', updated);
+    return updated;
+  }
+
+  async acknowledge(id: string): Promise<Order> {
+    const order = await this.findOne(id);
+    if (order.acknowledgedAt) return order;
+    order.acknowledgedAt = new Date();
+    await this.orderRepo.save(order);
+    const updated = await this.findOne(id);
+    this.orderEvents.emit('order.updated', updated);
+    return updated;
   }
 }

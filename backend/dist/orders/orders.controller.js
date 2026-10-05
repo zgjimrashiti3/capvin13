@@ -14,13 +14,16 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersController = void 0;
 const common_1 = require("@nestjs/common");
+const rxjs_1 = require("rxjs");
 const orders_service_1 = require("./orders.service");
 const create_order_dto_1 = require("./dto/create-order.dto");
 const update_order_status_dto_1 = require("./dto/update-order-status.dto");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
+const order_events_service_1 = require("./order-events.service");
 let OrdersController = class OrdersController {
-    constructor(ordersService) {
+    constructor(ordersService, orderEvents) {
         this.ordersService = ordersService;
+        this.orderEvents = orderEvents;
     }
     create(dto) {
         return this.ordersService.create(dto);
@@ -28,11 +31,20 @@ let OrdersController = class OrdersController {
     findAll(status, date) {
         return this.ordersService.findAll(status, date);
     }
+    stream() {
+        return this.orderEvents.stream();
+    }
+    findAlerts() {
+        return this.ordersService.findAlerts();
+    }
     findOne(id) {
         return this.ordersService.findOne(id);
     }
     updateStatus(id, dto) {
         return this.ordersService.updateStatus(id, dto);
+    }
+    acknowledge(id) {
+        return this.ordersService.acknowledge(id);
     }
 };
 exports.OrdersController = OrdersController;
@@ -53,6 +65,20 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], OrdersController.prototype, "findAll", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Sse)('stream'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", rxjs_1.Observable)
+], OrdersController.prototype, "stream", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('alerts'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], OrdersController.prototype, "findAlerts", null);
+__decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
     __metadata("design:type", Function),
@@ -68,8 +94,17 @@ __decorate([
     __metadata("design:paramtypes", [String, update_order_status_dto_1.UpdateOrderStatusDto]),
     __metadata("design:returntype", void 0)
 ], OrdersController.prototype, "updateStatus", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Patch)(':id/acknowledge'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseUUIDPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], OrdersController.prototype, "acknowledge", null);
 exports.OrdersController = OrdersController = __decorate([
     (0, common_1.Controller)('orders'),
-    __metadata("design:paramtypes", [orders_service_1.OrdersService])
+    __metadata("design:paramtypes", [orders_service_1.OrdersService,
+        order_events_service_1.OrderEventsService])
 ], OrdersController);
 //# sourceMappingURL=orders.controller.js.map
