@@ -7,7 +7,7 @@ CC BY / CC BY-SA photos require attribution to their authors as listed below.
 |---|---|---|---|
 | Espresso | [File:Cup of espresso 02.jpg](https://commons.wikimedia.org/wiki/File:Cup_of_espresso_02.jpg) | Kritzolina | CC BY-SA 4.0 |
 | Illy Crema | [Full Coffee Cup 4](https://www.flickr.com/photos/69388755@N00/71787480) | Paul Prins! | by 2.0 |
-| Macchiato e Vogël | [File:Caffè Espresso Macchiato Schiumato.jpg](https://commons.wikimedia.org/wiki/File:Caff%C3%A8_Espresso_Macchiato_Schiumato.jpg) | Marcingietorigie | CC BY-SA 3.0 |
+| Macchiato e Vogël | [File:Macchiato (3762933980).jpg](https://commons.wikimedia.org/wiki/File:Macchiato_(3762933980).jpg) | Neil Conway from Oakland, USA | CC BY 2.0 |
 | Macchiato e Madhe | [File:Latte macchiato biscuits.jpg](https://commons.wikimedia.org/wiki/File:Latte_macchiato_biscuits.jpg) | Wedesoft at English Wikipedia | CC BY-SA 3.0 |
 | Macchiato pa Plum | [File:Flickr - cyclonebill - Espresso med mælk.jpg](https://commons.wikimedia.org/wiki/File:Flickr_-_cyclonebill_-_Espresso_med_m%C3%A6lk.jpg) | cyclonebill | CC BY-SA 2.0 |
 | Cappuccino | [Cappuccino](https://www.flickr.com/photos/64097751@N00/2756648951) | Dominic's pics | by 2.0 |
