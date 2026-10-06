@@ -7,6 +7,7 @@ import {
 } from '../../api/menuItems';
 import { getCategories } from '../../api/categories';
 import { useToast } from '../../components/Toast';
+import { useShowImages } from '../../hooks/useShowImages';
 import type { MenuItem, Category, ItemSize } from '../../types';
 import { ITEM_SIZES, sizeLabelsFor } from '../../utils/sizes';
 
@@ -46,6 +47,7 @@ function ItemModal({
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const { showToast } = useToast();
+  const showImages = useShowImages();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -212,6 +214,11 @@ function ItemModal({
 
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-2 uppercase tracking-wide">Imazhi</label>
+            {!showImages && (
+              <p className="text-xs mb-2 px-2.5 py-1.5 rounded-md" style={{ backgroundColor: '#fef3c7', color: '#92400e' }}>
+                Fotot janë aktualisht të fshehura për klientët. Mund ta ngarkoni foton tani — do të shfaqet kur të aktivizoni "Shfaq fotot në meny" në Dashboard.
+              </p>
+            )}
             {imagePreview && (
               <img src={imagePreview} alt="preview" className="w-full h-40 object-cover rounded-lg mb-3 border border-gray-100" />
             )}

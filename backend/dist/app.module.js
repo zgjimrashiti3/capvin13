@@ -17,11 +17,13 @@ const categories_module_1 = require("./categories/categories.module");
 const menu_items_module_1 = require("./menu-items/menu-items.module");
 const upload_module_1 = require("./upload/upload.module");
 const orders_module_1 = require("./orders/orders.module");
+const settings_module_1 = require("./settings/settings.module");
 const category_entity_1 = require("./entities/category.entity");
 const menu_item_entity_1 = require("./entities/menu-item.entity");
 const user_entity_1 = require("./entities/user.entity");
 const order_entity_1 = require("./entities/order.entity");
 const order_item_entity_1 = require("./entities/order-item.entity");
+const app_settings_entity_1 = require("./entities/app-settings.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,7 +36,7 @@ exports.AppModule = AppModule = __decorate([
                 useFactory: (config) => ({
                     type: 'postgres',
                     url: config.get('DATABASE_URL'),
-                    entities: [category_entity_1.Category, menu_item_entity_1.MenuItem, user_entity_1.User, order_entity_1.Order, order_item_entity_1.OrderItem],
+                    entities: [category_entity_1.Category, menu_item_entity_1.MenuItem, user_entity_1.User, order_entity_1.Order, order_item_entity_1.OrderItem, app_settings_entity_1.AppSettings],
                     synchronize: true,
                     ssl: config.get('DATABASE_URL')?.includes('localhost') ||
                         config.get('DATABASE_URL')?.includes('@db:')
@@ -52,6 +54,7 @@ exports.AppModule = AppModule = __decorate([
             menu_items_module_1.MenuItemsModule,
             upload_module_1.UploadModule,
             orders_module_1.OrdersModule,
+            settings_module_1.SettingsModule,
         ],
     })
 ], AppModule);

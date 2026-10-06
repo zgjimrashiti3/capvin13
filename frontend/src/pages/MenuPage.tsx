@@ -14,6 +14,7 @@ import { useCart } from '../context/CartContext';
 import { useSessionOrders } from '../context/SessionOrdersContext';
 import { useToast } from '../components/Toast';
 import { useOrderStatusPolling } from '../hooks/useOrderStatusPolling';
+import { useShowImagesSetting } from '../hooks/useShowImages';
 import type { MenuItem } from '../types';
 
 export default function MenuPage() {
@@ -21,6 +22,9 @@ export default function MenuPage() {
     queryKey: ['menu-grouped'],
     queryFn: getMenuGrouped,
   });
+
+  // Loaded with the menu so the first render already uses the right layout (no photo flash).
+  const { showImages, isLoading: settingsLoading } = useShowImagesSetting();
 
   const { tableNumber, items: cartItems, addItem } = useCart();
   const { sessionOrders, updateSessionOrderStatus } = useSessionOrders();
@@ -55,7 +59,7 @@ export default function MenuPage() {
 
   const FOOD_CATS = new Set(['Antipasti', 'Pica Innovative', 'Pica Tradizionale', 'Pasta & Calzone']);
 
-  if (isLoading) {
+  if (isLoading || settingsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#006B3C' }}>
         <div className="text-center">
@@ -136,6 +140,20 @@ export default function MenuPage() {
 
             {cat.items.length === 0 ? (
               <p className="text-gray-400 text-sm italic">Nessun articolo in questa categoria.</p>
+            ) : !showImages ? (
+              /* Photos off: compact text-only list, 1-col on mobile, 2-col from md */
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 md:gap-3">
+                {cat.items.map((item) => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    showImage={false}
+                    cartQuantity={tableNumber ? getCartQty(item.id) : 0}
+                    onOrder={tableNumber ? (i) => setOrderingItem({ ...i, category: cat }) : undefined}
+                    onAddOne={tableNumber ? handleAddOne : undefined}
+                  />
+                ))}
+              </div>
             ) : FOOD_CATS.has(cat.name) ? (
               /* Food: horizontal scroll + snap on mobile, 2-col md, 3-col lg */
               <div className="-mx-3 px-3 scroll-pl-3 overflow-x-auto snap-x snap-mandatory pb-3 md:overflow-visible md:mx-0 md:px-0 md:scroll-pl-0 md:pb-0">

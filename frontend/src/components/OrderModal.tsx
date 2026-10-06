@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ItemSize, MenuItem } from '../types';
 import { useCart } from '../context/CartContext';
 import { ITEM_SIZES, sizeLabelsFor } from '../utils/sizes';
+import { useShowImages } from '../hooks/useShowImages';
 
 interface Props {
   item: MenuItem;
@@ -10,6 +11,9 @@ interface Props {
 
 export default function OrderModal({ item, onClose }: Props) {
   const { addItem } = useCart();
+  const showImages = useShowImages();
+  const [imgError, setImgError] = useState(false);
+  const hasPhoto = showImages && !!item.imageUrl && !imgError;
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
   const [size, setSize] = useState<ItemSize | null>(null);
@@ -43,28 +47,39 @@ export default function OrderModal({ item, onClose }: Props) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div className="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl">
-        {/* Item image or placeholder */}
-        <div className="relative h-44 sm:h-52">
-          {item.imageUrl ? (
-            <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(0,107,60,0.08) 0%, rgba(206,43,55,0.08) 100%)' }}>
-              <span className="text-6xl">🍽️</span>
+        {/* Item photo — skipped when photos are off or the item has none */}
+        {hasPhoto ? (
+          <div className="relative h-44 sm:h-52">
+            <img
+              src={item.imageUrl!}
+              alt={item.name}
+              className="w-full h-full object-cover"
+              onError={() => setImgError(true)}
+            />
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors text-lg leading-none"
+            >
+              ×
+            </button>
+            <div
+              className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg text-white text-sm font-bold shadow-md"
+              style={{ backgroundColor: '#CE2B37' }}
+            >
+              €{total}
             </div>
-          )}
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center hover:bg-black/60 transition-colors text-lg leading-none"
-          >
-            ×
-          </button>
-          <div
-            className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg text-white text-sm font-bold shadow-md"
-            style={{ backgroundColor: '#CE2B37' }}
-          >
-            €{total}
           </div>
-        </div>
+        ) : (
+          <div className="flex justify-end px-3 pt-3 -mb-3">
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center hover:bg-gray-200 transition-colors text-lg leading-none"
+              aria-label="Mbyll"
+            >
+              ×
+            </button>
+          </div>
+        )}
 
         <div className="px-6 py-5">
           <h3

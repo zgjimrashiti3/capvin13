@@ -5,6 +5,7 @@ import { useToast } from './Toast';
 import { createOrder } from '../api/orders';
 import type { CartItem } from '../types';
 import { cartKey, nameWithSize } from '../utils/sizes';
+import { useShowImages } from '../hooks/useShowImages';
 
 interface Props {
   open: boolean;
@@ -41,6 +42,7 @@ function QuantityRow({ item, onQty }: { item: CartItem; onQty: (id: string, qty:
 export default function CartDrawer({ open, onClose }: Props) {
   const { items, tableNumber, removeItem, updateQuantity, updateNotes, clearCart, totalPrice, totalItems } = useCart();
   const { addSessionOrder } = useSessionOrders();
+  const showImages = useShowImages();
   const { showToast } = useToast();
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
@@ -134,15 +136,17 @@ export default function CartDrawer({ open, onClose }: Props) {
                 return (
                 <div key={key} className="bg-gray-50 rounded-xl p-3">
                   <div className="flex gap-3">
-                    <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
-                      {item.imageUrl ? (
-                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xl" style={{ background: 'linear-gradient(135deg, rgba(0,107,60,0.1) 0%, rgba(206,43,55,0.1) 100%)' }}>
-                          🍽️
-                        </div>
-                      )}
-                    </div>
+                    {showImages && (
+                      <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+                        {item.imageUrl ? (
+                          <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-xl" style={{ background: 'linear-gradient(135deg, rgba(0,107,60,0.1) 0%, rgba(206,43,55,0.1) 100%)' }}>
+                            🍽️
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">

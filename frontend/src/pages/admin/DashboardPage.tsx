@@ -1,6 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCategories } from '../../api/categories';
 import { getMenuItems } from '../../api/menuItems';
+import { getSettings, updateSettings } from '../../api/settings';
+import { SETTINGS_QUERY_KEY } from '../../hooks/useShowImages';
+import { useToast } from '../../components/Toast';
 
 interface Props {
   onQuickAdd: (section: 'categories' | 'items') => void;
@@ -9,6 +12,22 @@ interface Props {
 export default function DashboardSection({ onQuickAdd }: Props) {
   const { data: categories } = useQuery({ queryKey: ['categories'], queryFn: getCategories });
   const { data: items } = useQuery({ queryKey: ['menu-items'], queryFn: () => getMenuItems() });
+  const { data: settings, isError: settingsError } = useQuery({ queryKey: SETTINGS_QUERY_KEY, queryFn: getSettings });
+  const qc = useQueryClient();
+  const { showToast } = useToast();
+
+  const settingsMut = useMutation({
+    mutationFn: updateSettings,
+    onSuccess: (updated) => {
+      qc.setQueryData(SETTINGS_QUERY_KEY, updated);
+      showToast(updated.showImages ? 'Fotot shfaqen në meny' : 'Fotot u fshehën nga menyja');
+    },
+    onError: () => showToast('Gabim gjatë ruajtjes së cilësimit', 'error'),
+  });
+  // Optimistic: reflect the click immediately while the request is in flight.
+  const showImages = settingsMut.isPending
+    ? !!settingsMut.variables?.showImages
+    : settings?.showImages ?? true;
 
   const totalCategories = categories?.length ?? 0;
   const totalItems = items?.length ?? 0;
@@ -66,6 +85,40 @@ export default function DashboardSection({ onQuickAdd }: Props) {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Menu settings */}
+      <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
+        <h2 className="text-base font-semibold text-[#1a1a1a] mb-4">Cilësimet e Menusë</h2>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <label htmlFor="toggle-show-images" className="text-sm font-medium text-[#1a1a1a] cursor-pointer">
+              Shfaq fotot në meny
+            </label>
+            <p className="text-xs mt-0.5" style={{ color: settingsError ? '#CE2B37' : '#6b7280' }}>
+              {settingsError
+                ? 'Cilësimi nuk u ngarkua nga serveri. Rinisni backend-in dhe rifreskoni faqen.'
+                : showImages
+                  ? 'Klientët i shohin artikujt me foto.'
+                  : 'Fotot janë të fshehura — menyja shfaqet vetëm me tekst. Fotot nuk fshihen nga sistemi.'}
+            </p>
+          </div>
+          <button
+            id="toggle-show-images"
+            type="button"
+            role="switch"
+            aria-checked={showImages}
+            disabled={!settings || settingsMut.isPending}
+            onClick={() => settingsMut.mutate({ showImages: !showImages })}
+            className="relative w-12 h-7 rounded-full transition-colors flex-shrink-0 disabled:cursor-not-allowed"
+            style={{ backgroundColor: showImages ? '#006B3C' : '#d1d5db', opacity: settings ? 1 : 0.5 }}
+          >
+            <span
+              className="absolute top-1 left-1 w-5 h-5 rounded-full bg-white shadow transition-transform"
+              style={{ transform: showImages ? 'translateX(20px)' : 'translateX(0)' }}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Quick actions */}
