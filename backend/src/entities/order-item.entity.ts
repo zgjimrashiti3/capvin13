@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
-import { MenuItem } from './menu-item.entity';
+import { MenuItem, ItemSize } from './menu-item.entity';
 
 @Entity('order_items')
 export class OrderItem {
@@ -25,6 +25,14 @@ export class OrderItem {
 
   @Column({ name: 'unit_price', type: 'decimal', precision: 10, scale: 2 })
   unitPrice: number;
+
+  // Chosen size for items with sizes; null for single-price items.
+  @Column({ type: 'varchar', length: 10, nullable: true })
+  size: ItemSize | null;
+
+  // Label shown for the size at the time of ordering, e.g. "E gjatë".
+  @Column({ name: 'size_label', type: 'varchar', nullable: true })
+  sizeLabel: string | null;
 
   @Column({ type: 'text', nullable: true })
   notes: string | null;

@@ -37,6 +37,14 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderItem.prototype, "unitPrice", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 10, nullable: true }),
+    __metadata("design:type", String)
+], OrderItem.prototype, "size", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'size_label', type: 'varchar', nullable: true }),
+    __metadata("design:type", String)
+], OrderItem.prototype, "sizeLabel", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'text', nullable: true }),
     __metadata("design:type", String)
 ], OrderItem.prototype, "notes", void 0);

@@ -61,7 +61,7 @@ export default function ItemCard({ item, cartQuantity = 0, onOrder, onAddOne }: 
           className="absolute bottom-2 right-2 px-2 py-0.5 rounded-lg text-white text-xs font-bold shadow-md"
           style={{ backgroundColor: '#CE2B37' }}
         >
-          €{Number(item.price).toFixed(2)}
+          {item.hasSizes && 'nga '}€{Number(item.price).toFixed(2)}
         </div>
       </div>
 

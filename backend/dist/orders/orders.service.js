@@ -29,7 +29,7 @@ let OrdersService = class OrdersService {
     }
     async create(dto) {
         const order = await this.dataSource.transaction(async (manager) => {
-            const menuItemIds = dto.items.map((i) => i.menuItemId);
+            const menuItemIds = [...new Set(dto.items.map((i) => i.menuItemId))];
             const menuItems = await manager.findBy(menu_item_entity_1.MenuItem, { id: (0, typeorm_2.In)(menuItemIds) });
             if (menuItems.length !== menuItemIds.length) {
                 throw new common_1.BadRequestException('Disa artikuj nuk u gjetën.');
@@ -42,12 +42,24 @@ let OrdersService = class OrdersService {
             let totalPrice = 0;
             const orderItems = dto.items.map((i) => {
                 const menuItem = itemMap.get(i.menuItemId);
-                const unitPrice = Number(menuItem.price);
+                let unitPrice = Number(menuItem.price);
+                let size = null;
+                let sizeLabel = null;
+                if (menuItem.hasSizes) {
+                    if (!i.size || !menuItem.sizePrices) {
+                        throw new common_1.BadRequestException(`Zgjidhni madhësinë për ${menuItem.name}.`);
+                    }
+                    size = i.size;
+                    unitPrice = Number(menuItem.sizePrices[size]);
+                    sizeLabel = menuItem.sizeLabels?.[size] || menu_item_entity_1.DEFAULT_SIZE_LABELS[size];
+                }
                 totalPrice += unitPrice * i.quantity;
                 return {
                     menuItemId: i.menuItemId,
                     quantity: i.quantity,
                     unitPrice,
+                    size,
+                    sizeLabel,
                     notes: i.notes || null,
                 };
             });

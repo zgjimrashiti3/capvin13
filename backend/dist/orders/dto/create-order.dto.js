@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateOrderDto = exports.OrderItemDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+const menu_item_entity_1 = require("../../entities/menu-item.entity");
 class OrderItemDto {
 }
 exports.OrderItemDto = OrderItemDto;
@@ -25,6 +26,11 @@ __decorate([
     (0, class_validator_1.Max)(20),
     __metadata("design:type", Number)
 ], OrderItemDto.prototype, "quantity", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(menu_item_entity_1.ITEM_SIZES),
+    __metadata("design:type", String)
+], OrderItemDto.prototype, "size", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

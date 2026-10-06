@@ -22,6 +22,7 @@ export declare class MenuItemsService {
     findOne(id: string): Promise<MenuItem>;
     create(dto: CreateMenuItemDto): Promise<MenuItem>;
     update(id: string, dto: UpdateMenuItemDto): Promise<MenuItem>;
+    private applySizes;
     remove(id: string): Promise<MenuItem>;
     toggle(id: string): Promise<MenuItem>;
 }

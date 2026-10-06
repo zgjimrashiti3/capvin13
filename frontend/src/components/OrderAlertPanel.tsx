@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useOrderAlerts } from '../context/OrderAlertsContext';
 import type { AlertConnection } from '../context/OrderAlertsContext';
 import type { Order } from '../types';
+import { nameWithSize } from '../utils/sizes';
 
 function shortId(id: string) {
   return id.slice(0, 6).toUpperCase();
@@ -107,7 +108,7 @@ function AlertOrderCard({ order, now, highlight }: { order: Order; now: number; 
         {order.items.map((item) => (
           <li key={item.id} className="text-base">
             <span className="font-bold text-[#1a1a1a]">{item.quantity}×</span>{' '}
-            <span className="text-[#1a1a1a]">{item.menuItem?.name ?? 'Artikull i fshirë'}</span>
+            <span className="text-[#1a1a1a]">{nameWithSize(item.menuItem?.name ?? 'Artikull i fshirë', item.size, item.sizeLabel)}</span>
             {item.notes && (
               <p className="ml-6 mt-0.5 text-sm italic px-2 py-1 rounded-md inline-block" style={{ backgroundColor: '#fef3c7', color: '#92400e' }}>
                 📝 {item.notes}

@@ -11,6 +11,7 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
     "seed": "ts-node -r tsconfig-paths/register src/seed.ts",
+    "migrate:item-sizes": "ts-node -r tsconfig-paths/register src/migrate-item-sizes.ts",
     "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm migration:run -d src/data-source.ts"
   },
   "dependencies": {

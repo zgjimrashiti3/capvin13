@@ -1,9 +1,9 @@
 import apiClient from './client';
-import type { Order, OrderStatus } from '../types';
+import type { ItemSize, Order, OrderStatus } from '../types';
 
 export interface CreateOrderPayload {
   tableNumber: number;
-  items: { menuItemId: string; quantity: number; notes?: string }[];
+  items: { menuItemId: string; quantity: number; notes?: string; size?: ItemSize }[];
 }
 
 export const createOrder = (payload: CreateOrderPayload): Promise<Order> =>

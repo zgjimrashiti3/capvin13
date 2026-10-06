@@ -3,7 +3,7 @@ import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
 import { Repository, DataSource, In, IsNull } from 'typeorm';
 import { Order, OrderStatus } from '../entities/order.entity';
 import { OrderItem } from '../entities/order-item.entity';
-import { MenuItem } from '../entities/menu-item.entity';
+import { MenuItem, ItemSize, DEFAULT_SIZE_LABELS } from '../entities/menu-item.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrderEventsService } from './order-events.service';
@@ -19,7 +19,8 @@ export class OrdersService {
 
   async create(dto: CreateOrderDto): Promise<Order> {
     const order = await this.dataSource.transaction(async (manager) => {
-      const menuItemIds = dto.items.map((i) => i.menuItemId);
+      // The same item can appear more than once (e.g. espresso in two sizes).
+      const menuItemIds = [...new Set(dto.items.map((i) => i.menuItemId))];
       const menuItems = await manager.findBy(MenuItem, { id: In(menuItemIds) });
 
       if (menuItems.length !== menuItemIds.length) {
@@ -38,12 +39,24 @@ export class OrdersService {
       let totalPrice = 0;
       const orderItems: Partial<OrderItem>[] = dto.items.map((i) => {
         const menuItem = itemMap.get(i.menuItemId)!;
-        const unitPrice = Number(menuItem.price);
+        let unitPrice = Number(menuItem.price);
+        let size: ItemSize | null = null;
+        let sizeLabel: string | null = null;
+        if (menuItem.hasSizes) {
+          if (!i.size || !menuItem.sizePrices) {
+            throw new BadRequestException(`Zgjidhni madhësinë për ${menuItem.name}.`);
+          }
+          size = i.size;
+          unitPrice = Number(menuItem.sizePrices[size]);
+          sizeLabel = menuItem.sizeLabels?.[size] || DEFAULT_SIZE_LABELS[size];
+        }
         totalPrice += unitPrice * i.quantity;
         return {
           menuItemId: i.menuItemId,
           quantity: i.quantity,
           unitPrice,
+          size,
+          sizeLabel,
           notes: i.notes || null,
         };
       });

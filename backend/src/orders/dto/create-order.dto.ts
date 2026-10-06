@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   IsInt,
   IsArray,
+  IsIn,
   IsUUID,
   IsOptional,
   IsString,
@@ -9,6 +10,7 @@ import {
   Max,
   ValidateNested,
 } from 'class-validator';
+import { ITEM_SIZES, ItemSize } from '../../entities/menu-item.entity';
 
 export class OrderItemDto {
   @IsUUID()
@@ -18,6 +20,11 @@ export class OrderItemDto {
   @Min(1)
   @Max(20)
   quantity: number;
+
+  // Required for items with sizes, ignored for single-price items.
+  @IsOptional()
+  @IsIn(ITEM_SIZES)
+  size?: ItemSize;
 
   @IsOptional()
   @IsString()

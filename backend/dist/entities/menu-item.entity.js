@@ -9,9 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MenuItem = void 0;
+exports.MenuItem = exports.DEFAULT_SIZE_LABELS = exports.ITEM_SIZES = void 0;
 const typeorm_1 = require("typeorm");
 const category_entity_1 = require("./category.entity");
+exports.ITEM_SIZES = ['small', 'medium', 'large'];
+exports.DEFAULT_SIZE_LABELS = {
+    small: 'E vogël',
+    medium: 'E mesme',
+    large: 'E madhe',
+};
 let MenuItem = class MenuItem {
 };
 exports.MenuItem = MenuItem;
@@ -35,6 +41,18 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'decimal', precision: 10, scale: 2 }),
     __metadata("design:type", Number)
 ], MenuItem.prototype, "price", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'has_sizes', type: 'boolean', default: false }),
+    __metadata("design:type", Boolean)
+], MenuItem.prototype, "hasSizes", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'size_prices', type: 'jsonb', nullable: true }),
+    __metadata("design:type", Object)
+], MenuItem.prototype, "sizePrices", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'size_labels', type: 'jsonb', nullable: true }),
+    __metadata("design:type", Object)
+], MenuItem.prototype, "sizeLabels", void 0);
 __decorate([
     (0, typeorm_1.Column)({ name: 'image_url', type: 'varchar', nullable: true }),
     __metadata("design:type", String)

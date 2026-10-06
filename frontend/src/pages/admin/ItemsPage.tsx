@@ -7,7 +7,8 @@ import {
 } from '../../api/menuItems';
 import { getCategories } from '../../api/categories';
 import { useToast } from '../../components/Toast';
-import type { MenuItem, Category } from '../../types';
+import type { MenuItem, Category, ItemSize } from '../../types';
+import { ITEM_SIZES, sizeLabelsFor } from '../../utils/sizes';
 
 interface SectionProps {
   triggerAdd: boolean;
@@ -31,6 +32,13 @@ function ItemModal({
   const [name, setName] = useState(initial?.name ?? '');
   const [description, setDescription] = useState(initial?.description ?? '');
   const [price, setPrice] = useState(String(initial?.price ?? ''));
+  const [hasSizes, setHasSizes] = useState(initial?.hasSizes ?? false);
+  const [sizePrices, setSizePrices] = useState<Record<ItemSize, string>>(() => ({
+    small: String(initial?.sizePrices?.small ?? ''),
+    medium: String(initial?.sizePrices?.medium ?? ''),
+    large: String(initial?.sizePrices?.large ?? ''),
+  }));
+  const [sizeLabels, setSizeLabels] = useState(() => sizeLabelsFor(initial ?? { sizeLabels: null }));
   const [categoryId, setCategoryId] = useState(initial?.categoryId ?? (categories[0]?.id ?? ''));
   const [sortOrder, setSortOrder] = useState(initial?.sortOrder ?? 0);
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? '');
@@ -64,8 +72,23 @@ function ItemModal({
     e.preventDefault();
     onSave({
       name,
-      description: description || undefined,
-      price: parseFloat(price),
+      // Send '' (not undefined) so clearing the description on edit actually removes it.
+      description: description.trim(),
+      ...(hasSizes
+        ? {
+            hasSizes: true,
+            sizePrices: {
+              small: parseFloat(sizePrices.small),
+              medium: parseFloat(sizePrices.medium),
+              large: parseFloat(sizePrices.large),
+            },
+            sizeLabels: {
+              small: sizeLabels.small.trim(),
+              medium: sizeLabels.medium.trim(),
+              large: sizeLabels.large.trim(),
+            },
+          }
+        : { hasSizes: false, price: parseFloat(price) }),
       categoryId,
       sortOrder: Number(sortOrder),
       imageUrl: imageUrl || undefined,
@@ -106,7 +129,7 @@ function ItemModal({
                 ))}
               </select>
             </div>
-            <div>
+            {!hasSizes && <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5 uppercase tracking-wide">Çmimi (€) *</label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
@@ -121,18 +144,60 @@ function ItemModal({
                   required
                 />
               </div>
-            </div>
+            </div>}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1.5 uppercase tracking-wide">Përshkrimi</label>
+            <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={hasSizes}
+                onChange={(e) => setHasSizes(e.target.checked)}
+                className="w-4 h-4 accent-[#006B3C]"
+              />
+              Ka madhësi (3 madhësi me çmim të veçantë)
+            </label>
+            {hasSizes && (
+              <div className="grid grid-cols-3 gap-3 mt-3">
+                {ITEM_SIZES.map((s) => (
+                  <div key={s} className="space-y-1.5">
+                    <input
+                      value={sizeLabels[s]}
+                      onChange={(e) => setSizeLabels((l) => ({ ...l, [s]: e.target.value }))}
+                      className={INPUT_CLS}
+                      maxLength={30}
+                      aria-label="Emri i madhësisë"
+                      required
+                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={sizePrices[s]}
+                        onChange={(e) => setSizePrices((p) => ({ ...p, [s]: e.target.value }))}
+                        className={`${INPUT_CLS} pl-7`}
+                        placeholder="0.00"
+                        required
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1.5 uppercase tracking-wide">Përshkrimi (opsional)</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              rows={3}
+              rows={2}
               className={`${INPUT_CLS} resize-none`}
-              placeholder="Përshkrim i shkurtër i artikullit..."
+              placeholder="p.sh. special: me shurup karamele"
             />
+            <p className="text-xs text-gray-400 mt-1">Shfaqet nën emrin e artikullit në meny. Lëre bosh për ta fshehur.</p>
           </div>
 
           <div>
@@ -319,8 +384,14 @@ export default function ItemsSection({ triggerAdd, onTriggerConsumed }: SectionP
                     </div>
                   </td>
                   <td className="px-6 py-4 text-gray-500 hidden md:table-cell">{getCategoryName(item.categoryId)}</td>
-                  <td className="px-6 py-4 text-right font-semibold text-[#1a1a1a]">
-                    €{Number(item.price).toFixed(2)}
+                  <td className="px-6 py-4 text-right font-semibold text-[#1a1a1a] whitespace-nowrap">
+                    {item.hasSizes && item.sizePrices
+                      ? ITEM_SIZES.map((s) => (
+                          <div key={s} className="text-xs">
+                            <span className="font-normal text-gray-400">{sizeLabelsFor(item)[s]}</span> €{Number(item.sizePrices![s]).toFixed(2)}
+                          </div>
+                        ))
+                      : `€${Number(item.price).toFixed(2)}`}
                   </td>
                   <td className="px-6 py-4 text-center">
                     <button

@@ -1,37 +1,40 @@
 import { useState } from 'react';
-import type { MenuItem } from '../types';
+import type { ItemSize, MenuItem } from '../types';
 import { useCart } from '../context/CartContext';
+import { ITEM_SIZES, sizeLabelsFor } from '../utils/sizes';
 
 interface Props {
   item: MenuItem;
   onClose: () => void;
 }
 
-const KAFE_SIZES = ['E vogël', 'E mesme', 'E gjatë'];
-
 export default function OrderModal({ item, onClose }: Props) {
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
-  const [size, setSize] = useState('');
+  const [size, setSize] = useState<ItemSize | null>(null);
 
-  const catName = item.category?.name?.toUpperCase() ?? '';
-  const isKafe = catName.includes('KAFE');
-  const canAdd = !isKafe || size !== '';
+  // Only items marked "has sizes" (e.g. espresso) require a size choice.
+  const sizePrices = item.hasSizes ? item.sizePrices : null;
+  const canAdd = !sizePrices || size !== null;
+  const sizeLabels = sizeLabelsFor(item);
+  const unitPrice = sizePrices && size ? Number(sizePrices[size]) : Number(item.price);
 
   const handleAdd = () => {
     addItem({
       menuItemId: item.id,
       name: item.name,
-      price: Number(item.price),
+      price: unitPrice,
       imageUrl: item.imageUrl,
       quantity,
-      notes: isKafe ? [size, notes].filter(Boolean).join(' — ') : notes,
+      notes,
+      size: sizePrices ? size : null,
+      sizeLabel: sizePrices && size ? sizeLabels[size] : null,
     });
     onClose();
   };
 
-  const total = (Number(item.price) * quantity).toFixed(2);
+  const total = (unitPrice * quantity).toFixed(2);
 
   return (
     <div
@@ -96,12 +99,12 @@ export default function OrderModal({ item, onClose }: Props) {
             </div>
           </div>
 
-          {/* Kafe: size selector */}
-          {isKafe && (
+          {/* Size selector — only for items with sizes */}
+          {sizePrices && (
             <div className="mb-5">
               <label className="block text-xs text-gray-400 mb-2">Madhësia</label>
               <div className="flex gap-2">
-                {KAFE_SIZES.map((s) => (
+                {ITEM_SIZES.map((s) => (
                   <button
                     key={s}
                     type="button"
@@ -113,7 +116,8 @@ export default function OrderModal({ item, onClose }: Props) {
                       color: size === s ? 'white' : '#006B3C',
                     }}
                   >
-                    {s}
+                    {sizeLabels[s]}
+                    <span className="block text-xs opacity-80">€{Number(sizePrices[s]).toFixed(2)}</span>
                   </button>
                 ))}
               </div>

@@ -30,10 +30,16 @@ export default function MenuPage() {
 
   useOrderStatusPolling(sessionOrders, updateSessionOrderStatus, showToast);
 
+  // Sums all cart lines for the item (an espresso can be in the cart in several sizes).
   const getCartQty = (menuItemId: string) =>
-    cartItems.find((i) => i.menuItemId === menuItemId)?.quantity ?? 0;
+    cartItems.filter((i) => i.menuItemId === menuItemId).reduce((s, i) => s + i.quantity, 0);
 
   const handleAddOne = (menuItem: MenuItem) => {
+    // Sized items can't be added blind — the customer must pick a size first.
+    if (menuItem.hasSizes) {
+      setOrderingItem(menuItem);
+      return;
+    }
     addItem({
       menuItemId: menuItem.id,
       name: menuItem.name,

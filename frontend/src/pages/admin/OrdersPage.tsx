@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getOrders, isAlertOrder, updateOrderStatus } from '../../api/orders';
 import type { Order, OrderStatus } from '../../types';
+import { nameWithSize } from '../../utils/sizes';
 import { useToast } from '../../components/Toast';
 import { useOrderAlerts } from '../../context/OrderAlertsContext';
 
@@ -41,7 +42,7 @@ function formatTime(dateStr: string) {
 
 function itemsSummary(order: Order) {
   return order.items
-    .map((i) => `${i.quantity}× ${i.menuItem?.name ?? 'Artikull'}`)
+    .map((i) => `${i.quantity}× ${nameWithSize(i.menuItem?.name ?? 'Artikull', i.size, i.sizeLabel)}`)
     .join(', ');
 }
 
@@ -82,7 +83,7 @@ function OrderDetailModal({ order, onClose, onStatusChange, updating }: OrderDet
               </div>
               <div className="flex-1">
                 <p className="font-semibold text-sm text-[#1a1a1a]" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
-                  {item.menuItem?.name ?? 'Artikull i fshirë'}
+                  {nameWithSize(item.menuItem?.name ?? 'Artikull i fshirë', item.size, item.sizeLabel)}
                 </p>
                 {item.notes && <p className="text-xs text-gray-400 italic mt-0.5">{item.notes}</p>}
                 <div className="flex items-center justify-between mt-1">

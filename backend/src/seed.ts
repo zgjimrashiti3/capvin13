@@ -22,6 +22,9 @@ type ItemDef = {
   price: number;
   sortOrder: number;
   imageUrl?: string;
+  hasSizes?: boolean;
+  sizePrices?: { small: number; medium: number; large: number };
+  sizeLabels?: { small: string; medium: string; large: string };
 };
 
 async function seed() {
@@ -92,14 +95,20 @@ async function seed() {
     friedPizza:      'https://images.unsplash.com/photo-1595854341625-f33ee10dbf9f?w=800',
   };
 
+  const MACCHIATO_SIZES = (price: number) => ({
+    hasSizes: true,
+    sizePrices: { small: price, medium: price, large: price },
+    sizeLabels: { small: 'E vogël', medium: 'E mesme', large: 'E madhe' },
+  });
+
   const itemsByCat: Array<[Category, ItemDef[]]> = [
 
     // ── Kafe ──
     [kafe, [
-      { name: 'Espresso',          imageUrl: IMG.espresso,   price: 1.2, sortOrder: 1 },
-      { name: 'Macchiato e Vogël', imageUrl: IMG.espresso,   price: 1.2, sortOrder: 2 },
-      { name: 'Macchiato pa Plum', imageUrl: IMG.cappuccino, price: 1.2, sortOrder: 3 },
-      { name: 'Macchiato e Madhe', imageUrl: IMG.frappe,     price: 1.5, sortOrder: 4 },
+      { name: 'Espresso',          imageUrl: IMG.espresso,   price: 1.2, sortOrder: 1, hasSizes: true, sizePrices: { small: 1.2, medium: 1.2, large: 1.2 }, sizeLabels: { small: 'E shkurtër', medium: 'E mesme', large: 'E gjatë' } },
+      { name: 'Macchiato e Vogël', imageUrl: IMG.espresso,   price: 1.2, sortOrder: 2, ...MACCHIATO_SIZES(1.2) },
+      { name: 'Macchiato pa Plum', imageUrl: IMG.cappuccino, price: 1.2, sortOrder: 3, ...MACCHIATO_SIZES(1.2) },
+      { name: 'Macchiato e Madhe', imageUrl: IMG.frappe,     price: 1.5, sortOrder: 4, ...MACCHIATO_SIZES(1.5) },
       { name: 'Cappuccino',        imageUrl: IMG.cappuccino, price: 1.5, sortOrder: 5 },
       { name: 'Illy Crema',        imageUrl: IMG.espresso,   price: 1.5, sortOrder: 6 },
       { name: 'Frappe',            imageUrl: IMG.frappe,     price: 1.5, sortOrder: 7 },

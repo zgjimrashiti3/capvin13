@@ -8,12 +8,19 @@ export interface Category {
   updatedAt: string;
 }
 
+export type ItemSize = 'small' | 'medium' | 'large';
+export type SizePrices = Record<ItemSize, number>;
+export type SizeLabels = Record<ItemSize, string>;
+
 export interface MenuItem {
   id: string;
   categoryId: string;
   name: string;
   description: string | null;
   price: number;
+  hasSizes: boolean;
+  sizePrices: SizePrices | null;
+  sizeLabels: SizeLabels | null;
   imageUrl: string | null;
   isAvailable: boolean;
   sortOrder: number;
@@ -44,6 +51,8 @@ export interface OrderItem {
   menuItemId: string | null;
   quantity: number;
   unitPrice: number;
+  size: ItemSize | null;
+  sizeLabel: string | null;
   notes: string | null;
   createdAt: string;
   menuItem?: MenuItem | null;
@@ -67,4 +76,6 @@ export interface CartItem {
   imageUrl: string | null;
   quantity: number;
   notes: string;
+  size?: ItemSize | null;
+  sizeLabel?: string | null;
 }

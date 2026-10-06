@@ -3,6 +3,7 @@ import { useSessionOrders, type SessionOrder } from '../context/SessionOrdersCon
 import { useCart } from '../context/CartContext';
 import TableModal from './TableModal';
 import type { OrderStatus } from '../types';
+import { cartKey, nameWithSize } from '../utils/sizes';
 
 const STATUS_LABELS: Record<OrderStatus, string> = {
   PENDING: 'Në pritje',
@@ -136,9 +137,9 @@ export default function OrderHistoryDrawer({ open, onClose }: Props) {
                     {/* Items */}
                     <div className="px-4 py-3 space-y-1">
                       {order.items.map((item) => (
-                        <div key={item.menuItemId} className="flex items-center justify-between">
+                        <div key={cartKey(item)} className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">
-                            {item.quantity}× {item.name}
+                            {item.quantity}× {nameWithSize(item.name, item.size, item.sizeLabel)}
                             {item.notes && (
                               <span className="text-xs text-gray-400 italic ml-1">({item.notes})</span>
                             )}

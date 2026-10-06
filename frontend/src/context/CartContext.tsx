@@ -1,14 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { CartItem } from '../types';
+import { cartKey } from '../utils/sizes';
 
 interface CartContextValue {
   items: CartItem[];
   tableNumber: number | null;
   setTableNumber: (n: number) => void;
   addItem: (item: CartItem) => void;
-  removeItem: (menuItemId: string) => void;
-  updateQuantity: (menuItemId: string, quantity: number) => void;
-  updateNotes: (menuItemId: string, notes: string) => void;
+  // `key` is the cart line key from cartKey() (item id + size).
+  removeItem: (key: string) => void;
+  updateQuantity: (key: string, quantity: number) => void;
+  updateNotes: (key: string, notes: string) => void;
   clearCart: () => void;
   totalPrice: number;
   totalItems: number;
@@ -45,10 +47,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback((newItem: CartItem) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.menuItemId === newItem.menuItemId);
+      const key = cartKey(newItem);
+      const existing = prev.find((i) => cartKey(i) === key);
       if (existing) {
         return prev.map((i) =>
-          i.menuItemId === newItem.menuItemId
+          cartKey(i) === key
             ? { ...i, quantity: Math.min(20, i.quantity + newItem.quantity), notes: newItem.notes || i.notes }
             : i,
         );
@@ -57,24 +60,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  const removeItem = useCallback((menuItemId: string) => {
-    setItems((prev) => prev.filter((i) => i.menuItemId !== menuItemId));
+  const removeItem = useCallback((key: string) => {
+    setItems((prev) => prev.filter((i) => cartKey(i) !== key));
   }, []);
 
   // quantity 0 → auto-remove the item
-  const updateQuantity = useCallback((menuItemId: string, quantity: number) => {
+  const updateQuantity = useCallback((key: string, quantity: number) => {
     if (quantity <= 0) {
-      setItems((prev) => prev.filter((i) => i.menuItemId !== menuItemId));
+      setItems((prev) => prev.filter((i) => cartKey(i) !== key));
       return;
     }
     setItems((prev) =>
-      prev.map((i) => (i.menuItemId === menuItemId ? { ...i, quantity: Math.min(20, quantity) } : i)),
+      prev.map((i) => (cartKey(i) === key ? { ...i, quantity: Math.min(20, quantity) } : i)),
     );
   }, []);
 
-  const updateNotes = useCallback((menuItemId: string, notes: string) => {
+  const updateNotes = useCallback((key: string, notes: string) => {
     setItems((prev) =>
-      prev.map((i) => (i.menuItemId === menuItemId ? { ...i, notes } : i)),
+      prev.map((i) => (cartKey(i) === key ? { ...i, notes } : i)),
     );
   }, []);
 

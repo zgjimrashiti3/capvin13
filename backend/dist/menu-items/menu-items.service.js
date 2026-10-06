@@ -56,13 +56,34 @@ let MenuItemsService = class MenuItemsService {
         return item;
     }
     async create(dto) {
-        const item = this.repo.create(dto);
+        const item = this.repo.create({
+            ...dto,
+            sizePrices: dto.sizePrices ? { ...dto.sizePrices } : null,
+            sizeLabels: dto.sizeLabels ? { ...dto.sizeLabels } : null,
+        });
+        this.applySizes(item);
         return this.repo.save(item);
     }
     async update(id, dto) {
         const item = await this.findOne(id);
         Object.assign(item, dto);
+        if (dto.sizePrices)
+            item.sizePrices = { ...dto.sizePrices };
+        if (dto.sizeLabels)
+            item.sizeLabels = { ...dto.sizeLabels };
+        this.applySizes(item);
         return this.repo.save(item);
+    }
+    applySizes(item) {
+        if (!item.hasSizes) {
+            if (item.price == null)
+                throw new common_1.BadRequestException('Çmimi është i detyrueshëm.');
+            return;
+        }
+        if (!item.sizePrices) {
+            throw new common_1.BadRequestException('Çmimet për madhësitë janë të detyrueshme.');
+        }
+        item.price = Math.min(...menu_item_entity_1.ITEM_SIZES.map((s) => Number(item.sizePrices[s])));
     }
     async remove(id) {
         const item = await this.findOne(id);

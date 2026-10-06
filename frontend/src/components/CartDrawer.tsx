@@ -4,6 +4,7 @@ import { useSessionOrders } from '../context/SessionOrdersContext';
 import { useToast } from './Toast';
 import { createOrder } from '../api/orders';
 import type { CartItem } from '../types';
+import { cartKey, nameWithSize } from '../utils/sizes';
 
 interface Props {
   open: boolean;
@@ -15,7 +16,7 @@ function QuantityRow({ item, onQty }: { item: CartItem; onQty: (id: string, qty:
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <button
-          onClick={() => onQty(item.menuItemId, item.quantity - 1)}
+          onClick={() => onQty(cartKey(item), item.quantity - 1)}
           className="w-8 h-8 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:border-gray-400 transition-colors flex items-center justify-center"
           title={item.quantity === 1 ? 'Hiq nga shporta' : ''}
         >
@@ -23,7 +24,7 @@ function QuantityRow({ item, onQty }: { item: CartItem; onQty: (id: string, qty:
         </button>
         <span className="text-sm font-semibold w-4 text-center">{item.quantity}</span>
         <button
-          onClick={() => onQty(item.menuItemId, item.quantity + 1)}
+          onClick={() => onQty(cartKey(item), item.quantity + 1)}
           disabled={item.quantity >= 20}
           className="w-8 h-8 rounded-full bg-white border border-gray-200 text-sm font-bold text-gray-500 hover:border-gray-400 disabled:opacity-30 transition-colors flex items-center justify-center"
         >
@@ -56,7 +57,12 @@ export default function CartDrawer({ open, onClose }: Props) {
     try {
       const created = await createOrder({
         tableNumber,
-        items: snapshot.map((i) => ({ menuItemId: i.menuItemId, quantity: i.quantity, notes: i.notes })),
+        items: snapshot.map((i) => ({
+          menuItemId: i.menuItemId,
+          quantity: i.quantity,
+          notes: i.notes,
+          ...(i.size ? { size: i.size } : {}),
+        })),
       });
       addSessionOrder({
         id: created.id,
@@ -82,14 +88,14 @@ export default function CartDrawer({ open, onClose }: Props) {
     onClose();
   };
 
-  const startEditNote = (menuItemId: string, currentNotes: string) => {
-    setEditingNoteId(menuItemId);
+  const startEditNote = (key: string, currentNotes: string) => {
+    setEditingNoteId(key);
     setEditingNoteValue(currentNotes);
     setTimeout(() => noteInputRef.current?.focus(), 0);
   };
 
-  const commitNote = (menuItemId: string) => {
-    updateNotes(menuItemId, editingNoteValue.trim());
+  const commitNote = (key: string) => {
+    updateNotes(key, editingNoteValue.trim());
     setEditingNoteId(null);
   };
 
@@ -123,8 +129,10 @@ export default function CartDrawer({ open, onClose }: Props) {
             </div>
           ) : (
             <div className="space-y-3">
-              {items.map((item) => (
-                <div key={item.menuItemId} className="bg-gray-50 rounded-xl p-3">
+              {items.map((item) => {
+                const key = cartKey(item);
+                return (
+                <div key={key} className="bg-gray-50 rounded-xl p-3">
                   <div className="flex gap-3">
                     <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
                       {item.imageUrl ? (
@@ -139,10 +147,10 @@ export default function CartDrawer({ open, onClose }: Props) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <p className="font-semibold text-sm text-[#1a1a1a] leading-tight" style={{ fontFamily: '"Fraunces", Georgia, serif' }}>
-                          {item.name}
+                          {nameWithSize(item.name, item.size, item.sizeLabel)}
                         </p>
                         <button
-                          onClick={() => removeItem(item.menuItemId)}
+                          onClick={() => removeItem(key)}
                           className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 text-lg leading-none p-1 -m-1"
                         >
                           ×
@@ -155,15 +163,15 @@ export default function CartDrawer({ open, onClose }: Props) {
                   </div>
 
                   {/* Inline note editor */}
-                  {editingNoteId === item.menuItemId ? (
+                  {editingNoteId === key ? (
                     <input
                       ref={noteInputRef}
                       type="text"
                       value={editingNoteValue}
                       onChange={(e) => setEditingNoteValue(e.target.value)}
-                      onBlur={() => commitNote(item.menuItemId)}
+                      onBlur={() => commitNote(key)}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') commitNote(item.menuItemId);
+                        if (e.key === 'Enter') commitNote(key);
                         if (e.key === 'Escape') setEditingNoteId(null);
                       }}
                       placeholder="P.sh. pa kripë, pa qepë..."
@@ -174,14 +182,14 @@ export default function CartDrawer({ open, onClose }: Props) {
                     <div className="mt-1.5">
                       {item.notes ? (
                         <button
-                          onClick={() => startEditNote(item.menuItemId, item.notes)}
+                          onClick={() => startEditNote(key, item.notes)}
                           className="text-xs text-gray-400 italic hover:text-gray-600 transition-colors text-left w-full truncate"
                         >
                           📝 {item.notes}
                         </button>
                       ) : (
                         <button
-                          onClick={() => startEditNote(item.menuItemId, '')}
+                          onClick={() => startEditNote(key, '')}
                           className="text-xs text-gray-300 hover:text-gray-500 transition-colors"
                         >
                           + Shto shënim
@@ -190,7 +198,8 @@ export default function CartDrawer({ open, onClose }: Props) {
                     </div>
                   )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
